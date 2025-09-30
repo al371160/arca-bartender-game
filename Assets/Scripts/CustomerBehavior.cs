@@ -19,6 +19,7 @@ public class CustomerBehavior : MonoBehaviour
     private float patience = 20f;
     private float waitTimer = 0f;
 
+    public bool IsWandering => waiting && seatTarget == null;
     public BoxCollider wanderArea; // assign in inspector
     private float wanderCooldown = 3f;
     private float wanderTimer = 0f;
@@ -56,10 +57,18 @@ public class CustomerBehavior : MonoBehaviour
         seatTarget.Claim(this);
     }
 
+
+
     public void EnterBar(BoxCollider area) {
         waiting = true;
         wanderArea = area;
         Wander();
+    }
+
+    public void TryTakeSeat(Seat seat) {
+        if (IsWandering) {
+            AssignSeat(seat);
+        }
     }
 
     private void Wander() {
@@ -75,7 +84,7 @@ public class CustomerBehavior : MonoBehaviour
     private IEnumerator DoSeatRoutine() {
         gameManager.RegisterRequest(this);
 
-        yield return new WaitForSeconds(Random.Range(5f, 10f));
+        yield return new WaitForSeconds(Random.Range(10f, 20f));
 
         if (isGood) {
             gameManager.AddTip(Random.Range(1, 3));

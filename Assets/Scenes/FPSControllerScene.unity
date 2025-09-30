@@ -198,7 +198,7 @@ Transform:
   m_GameObject: {fileID: 73031726}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.02, y: 1.14, z: -9.46}
+  m_LocalPosition: {x: 0.02, y: 1.14, z: -28.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -662,7 +662,7 @@ Transform:
   m_GameObject: {fileID: 282313640}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -6.79}
+  m_LocalPosition: {x: 0, y: 0, z: -24.78}
   m_LocalScale: {x: 2.2809505, y: 2.2809505, z: 2.2809505}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -817,7 +817,7 @@ Transform:
   m_GameObject: {fileID: 314550881}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.9377055, y: 2.37, z: -1.43}
+  m_LocalPosition: {x: -0.9377055, y: 2.37, z: -27.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -845,7 +845,7 @@ MonoBehaviour:
   bartender: {fileID: 960123494}
   gameManager: {fileID: 1986292926}
   waitingArea: {fileID: 1728504257}
-  spawnInterval: 5
+  spawnInterval: 3
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1498,7 +1498,7 @@ Transform:
   m_GameObject: {fileID: 960123489}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.9367009, y: 1.64, z: 0.28}
+  m_LocalPosition: {x: -0.9367009, y: 1.07, z: -34.21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1885,7 +1885,7 @@ Transform:
   m_GameObject: {fileID: 1343957379}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.99, z: 0}
+  m_LocalPosition: {x: 0, y: -1.99, z: -4.37}
   m_LocalScale: {x: 7.7479076, y: 1.2008, z: 1.7274}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2245,7 +2245,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -2313,8 +2313,8 @@ Transform:
   m_GameObject: {fileID: 1728504256}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.7583624, y: 1.48, z: -9.04}
-  m_LocalScale: {x: 25.741787, y: 7.6938996, z: 17.338152}
+  m_LocalPosition: {x: -1.7583624, y: 1.48, z: -22.77}
+  m_LocalScale: {x: 25.741787, y: 7.6938996, z: 10.991695}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2583,7 +2583,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2077480883}
-  - component: {fileID: 2077480884}
   m_Layer: 0
   m_Name: Doors
   m_TagString: Untagged
@@ -2600,7 +2599,7 @@ Transform:
   m_GameObject: {fileID: 2077480882}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.93979704, y: 2.3472488, z: -15.24}
+  m_LocalPosition: {x: -0.93979704, y: 2.3472488, z: -26.19}
   m_LocalScale: {x: 1.214, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2611,24 +2610,6 @@ Transform:
   - {fileID: 2086369756}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2077480884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2077480882}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdeb51bac1cbc4350a631dde20b8f2e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  customerPrefab: {fileID: 0}
-  doors: []
-  bartender: {fileID: 0}
-  gameManager: {fileID: 0}
-  waitingArea: {fileID: 0}
-  spawnInterval: 6
 --- !u!1 &2086369755
 GameObject:
   m_ObjectHideFlags: 0

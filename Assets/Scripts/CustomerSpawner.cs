@@ -16,7 +16,7 @@ public class CustomerSpawner : MonoBehaviour
     private List<Seat> seats = new List<Seat>();
 
     void Start() {
-        seats.AddRange(FindObjectsOfType<Seat>());
+        seats.AddRange(FindObjectsByType<Seat>(FindObjectsInactive.Exclude, FindObjectsSortMode.None));
     }
 
     void Update() {
@@ -28,6 +28,11 @@ public class CustomerSpawner : MonoBehaviour
     }
 
     void TrySpawnCustomer() {
+        if (doors == null || doors.Length == 0) {
+            Debug.LogError("No doors assigned to CustomerSpawner!");
+            return;
+        }
+
         Transform door = doors[Random.Range(0, doors.Length)];
 
         CustomerBehavior c = Instantiate(customerPrefab, door.position, Quaternion.identity);
@@ -56,5 +61,16 @@ public class CustomerSpawner : MonoBehaviour
 
     void RemoveCustomer(CustomerBehavior c) {
         activeCustomers.Remove(c);
+
+        // after a customer leaves, check if a wandering one can take the seat
+        Seat freeSeat = GetFreeSeat();
+        if (freeSeat != null) {
+            foreach (var cust in activeCustomers) {
+                if (cust != null && cust.IsWandering) {
+                    cust.TryTakeSeat(freeSeat);
+                    break; // one seat per customer
+                }
+            }
+        }
     }
 }
