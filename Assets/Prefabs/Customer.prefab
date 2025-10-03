@@ -859,7 +859,7 @@ GameObject:
   - component: {fileID: 6849741597672184804}
   - component: {fileID: 3887724225683265712}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: CustomerHealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -874,15 +874,15 @@ RectTransform:
   m_GameObject: {fileID: 2185495316683262203}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 0.033491183, y: 0.033491183, z: 0.033491183}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7054649690860996222}
-  m_Father: {fileID: 2365344179481893237}
+  m_Father: {fileID: 3026357866286257535}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 3.2821362}
   m_SizeDelta: {x: 825.5, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4305546386958282867
@@ -2248,6 +2248,7 @@ Transform:
   m_LocalScale: {x: 0.29858604, y: 0.29858604, z: 0.29858604}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1084181240340983844}
   - {fileID: 3435568729083271524}
   - {fileID: 765095784779074760}
   m_Father: {fileID: 2365344179481893237}
@@ -2310,7 +2311,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3026357866286257535}
-  - {fileID: 1084181240340983844}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &703646267946522216
@@ -2328,7 +2328,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8365157941307350025}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

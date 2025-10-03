@@ -16,19 +16,21 @@ public class Projectile : MonoBehaviour
         CustomerBehavior customer = collision.collider.GetComponent<CustomerBehavior>();
         if (customer != null)
         {
-                RagdollController ragdoll = collision.collider.GetComponentInParent<RagdollController>();
-                if (ragdoll != null)
-                {
-                    ragdoll.SetRagdoll(true);
-                    Debug.Log("hit");
+            customer.TakeDamage(50); // deals 50 damage; placeholder
 
-                    // Optional: add impact force
-                    Rigidbody hitRb = collision.rigidbody;
-                    if (hitRb != null)
-                    {
-                        hitRb.AddForce(collision.relativeVelocity * 5f, ForceMode.Impulse);
-                    }
+            RagdollController ragdoll = collision.collider.GetComponentInParent<RagdollController>();
+            if (ragdoll != null && customer.customerCurrentHealth == 0)
+            {
+                ragdoll.SetRagdoll(true);
+                Debug.Log("hit");
+
+                // Optional: add impact force
+                Rigidbody hitRb = collision.rigidbody;
+                if (hitRb != null)
+                {
+                    hitRb.AddForce(collision.relativeVelocity * 5f, ForceMode.Impulse);
                 }
+            }    
 
                 //Destroy(gameObject);
         }

@@ -5,6 +5,7 @@ public class CustomerHealthBar : MonoBehaviour
 {
     [Header("References")]
     public CustomerBehavior customer;  // drag parent Customer here
+    public RagdollController ragdoll;  // check if customer is dead
     public Image healthFill;           // drag the Fill Image (UI -> Image) here
     public Camera mainCamera;          // assign main camera in inspector or auto-find
 
@@ -20,6 +21,10 @@ public class CustomerHealthBar : MonoBehaviour
         {
             float fillValue = (float)customer.customerCurrentHealth / customer.customerMaxHealth;
             healthFill.fillAmount = fillValue;
+            if (customer.customerCurrentHealth == 0)
+            {
+                Destroy(gameObject); // removes health bar on death
+            }
         }
 
         // Make sure the health bar always faces the camera
