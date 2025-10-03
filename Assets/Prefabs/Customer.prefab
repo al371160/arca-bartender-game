@@ -2288,7 +2288,7 @@ GameObject:
   - component: {fileID: 7205206653339491143}
   - component: {fileID: 7082800335083003613}
   - component: {fileID: 8107693010112605282}
-  - component: {fileID: 7088386774885467298}
+  - component: {fileID: 1239399712662056591}
   m_Layer: 0
   m_Name: Customer
   m_TagString: Untagged
@@ -2328,7 +2328,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8365157941307350025}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2433,7 +2433,7 @@ MonoBehaviour:
   wanderArea: {fileID: 0}
   customerMaxHealth: 100
   customerCurrentHealth: 100
---- !u!114 &7088386774885467298
+--- !u!114 &1239399712662056591
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
