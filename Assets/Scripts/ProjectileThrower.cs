@@ -4,6 +4,8 @@ public class ProjectileThrower : MonoBehaviour
 {
     public GameObject projectilePrefab;
     public float throwForce = 15f;
+    public float upwardForce = 2f;   // tweak for arc
+    public float spinTorque = 5f;    // tweak for spin
     public Transform throwOrigin;
 
     void Update()
@@ -18,13 +20,8 @@ public class ProjectileThrower : MonoBehaviour
     {
         if (projectilePrefab == null || throwOrigin == null) return;
 
-        // Compute throw direction
         Vector3 throwDir = Camera.main.transform.forward.normalized;
-
-        // Spawn slightly in front of origin to avoid overlap
         Vector3 spawnPos = throwOrigin.position + throwDir * 0.6f;
-
-        // Align rotation with throw direction
         Quaternion spawnRot = Quaternion.LookRotation(throwDir);
 
         GameObject proj = Instantiate(projectilePrefab, spawnPos, spawnRot);
@@ -34,9 +31,15 @@ public class ProjectileThrower : MonoBehaviour
         {
             rb.isKinematic = false;
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-            rb.AddForce(throwDir * throwForce, ForceMode.VelocityChange);
 
-            // Ignore collisions with thrower itself
+            // Apply forward + upward velocity
+            Vector3 finalForce = throwDir * throwForce + Vector3.up * upwardForce;
+            rb.AddForce(finalForce, ForceMode.VelocityChange);
+
+            // Apply forward spin (around right axis for a "football throw" look)
+            rb.AddTorque(Camera.main.transform.right * spinTorque, ForceMode.VelocityChange);
+
+            // Ignore self-collision
             Collider projCol = proj.GetComponent<Collider>();
             Collider throwerCol = throwOrigin.root.GetComponent<Collider>();
             if (projCol != null && throwerCol != null)
