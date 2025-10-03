@@ -921,7 +921,7 @@ MonoBehaviour:
   bartender: {fileID: 960123494}
   gameManager: {fileID: 1986292926}
   waitingArea: {fileID: 1728504257}
-  spawnInterval: 0.05
+  spawnInterval: 3
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -2946,6 +2946,10 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 1986292926}
+    - target: {fileID: 8309351448850252865, guid: 71669139603b64cef8cd7064e16c737f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8365157941307350025, guid: 71669139603b64cef8cd7064e16c737f, type: 3}
       propertyPath: m_Name
       value: Customer

@@ -20,6 +20,7 @@ public class Projectile : MonoBehaviour
                 if (ragdoll != null)
                 {
                     ragdoll.SetRagdoll(true);
+                    Debug.Log("hit");
 
                     // Optional: add impact force
                     Rigidbody hitRb = collision.rigidbody;
@@ -29,7 +30,7 @@ public class Projectile : MonoBehaviour
                     }
                 }
 
-                Destroy(gameObject);
+                //Destroy(gameObject);
         }
 
         //Destroy(gameObject);
