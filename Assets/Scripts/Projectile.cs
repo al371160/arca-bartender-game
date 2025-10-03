@@ -19,6 +19,6 @@ public class Projectile : MonoBehaviour
             Debug.Log("Hit customer (trigger): " + customer.name);
         }
 
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 }
