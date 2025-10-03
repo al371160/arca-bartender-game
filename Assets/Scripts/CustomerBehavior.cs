@@ -24,6 +24,16 @@ public class CustomerBehavior : MonoBehaviour
     private float wanderCooldown = 3f;
     private float wanderTimer = 0f;
 
+    public int customerMaxHealth = 100;
+    public int customerCurrentHealth = 100;
+    public bool customerIsDead => customerCurrentHealth <= 0;
+
+    public void TakeDamage(int amount) {
+        customerCurrentHealth -= amount;
+        customerCurrentHealth = Mathf.Max(0, customerCurrentHealth);
+        Debug.Log($"Bartender HP: {customerCurrentHealth}/{customerMaxHealth}");
+    }
+
     void Awake() {
         agent = GetComponent<NavMeshAgent>();
     }
