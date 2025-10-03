@@ -7,22 +7,29 @@ public class Projectile : MonoBehaviour
 
     private void Start()
     {
-        Destroy(gameObject, lifeTime); // auto-destroy after some time
+        // Ensure lifetime is valid
+        if (lifeTime > 0)
+            Destroy(gameObject, lifeTime);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        CustomerBehavior customer = collision.collider.GetComponent<CustomerBehavior>();
+        HandleHit(collision.collider);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        HandleHit(other);
+    }
+
+    private void HandleHit(Collider col)
+    {
+        CustomerBehavior customer = col.GetComponent<CustomerBehavior>();
         if (customer != null)
         {
-            // Example reaction: bad customer if not already
-            customer.BecomeBad();
-            Debug.Log($"{customer.name} got hit and became bad!");
-
-            // Optional: apply additional effect here
+            Debug.Log($"{customer.name} got hit!");
         }
 
-        // Destroy the projectile on hit
         Destroy(gameObject);
     }
 }
