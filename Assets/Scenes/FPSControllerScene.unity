@@ -1264,15 +1264,15 @@ PrefabInstance:
       objectReference: {fileID: 543450652583773341}
     - target: {fileID: 3836710221686757777, guid: ca18e18b1e0464214906cc80a1ab027b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 86.13944
+      value: 160.75342
       objectReference: {fileID: 0}
     - target: {fileID: 3836710221686757777, guid: ca18e18b1e0464214906cc80a1ab027b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 86.13944
+      value: 160.75342
       objectReference: {fileID: 0}
     - target: {fileID: 3836710221686757777, guid: ca18e18b1e0464214906cc80a1ab027b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 86.13944
+      value: 160.75342
       objectReference: {fileID: 0}
     - target: {fileID: 3836710221686757777, guid: ca18e18b1e0464214906cc80a1ab027b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1316,7 +1316,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4500621269264204587, guid: ca18e18b1e0464214906cc80a1ab027b, type: 3}
       propertyPath: m_Name
-      value: iso_alc_projectile
+      value: iso_alc_item
+      objectReference: {fileID: 0}
+    - target: {fileID: 8943487333520235140, guid: ca18e18b1e0464214906cc80a1ab027b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
