@@ -13,28 +13,43 @@ public class Projectile : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Projectile hit: " + collision.collider.name);
-        CustomerBehavior customer = collision.collider.GetComponent<CustomerBehavior>();
-        if (customer != null)
+
+        // ✅ Get the body part script
+        BodyPart bodyPart = collision.collider.GetComponent<BodyPart>();
+        if (bodyPart != null)
         {
-            customer.TakeDamage(50); // deals 50 damage; placeholder
-
-            RagdollController ragdoll = collision.collider.GetComponentInParent<RagdollController>();
-            if (ragdoll != null && customer.customerCurrentHealth == 0)
+            CustomerBehavior customer = bodyPart.GetCustomer();
+            if (customer != null)
             {
-                ragdoll.SetRagdoll(true);
-                Debug.Log("hit");
-
-                // Optional: add impact force
-                Rigidbody hitRb = collision.rigidbody;
-                if (hitRb != null)
+                // Stop movement (set NavMeshAgent speed to 0)
+                var agent = customer.GetComponent<UnityEngine.AI.NavMeshAgent>();
+                if (agent != null)
                 {
-                    hitRb.AddForce(collision.relativeVelocity * 5f, ForceMode.Impulse);
+                    agent.speed = 0f;
+                    agent.isStopped = true; // extra guarantee NavMeshAgent halts
                 }
-            }    
 
-                //Destroy(gameObject);
+                // Apply damage
+                customer.TakeDamage((int)damage);
+
+                // If dead, trigger ragdoll
+                RagdollController ragdoll = customer.GetComponent<RagdollController>();
+                if (ragdoll != null && customer.customerIsDead)
+                {
+                    ragdoll.SetRagdoll(true);
+                    Debug.Log("Ragdoll triggered!");
+
+                    // Apply impact force where projectile hit
+                    ContactPoint contact = collision.contacts[0];
+                    Rigidbody hitRb = contact.otherCollider.attachedRigidbody;
+                    if (hitRb != null)
+                    {
+                        hitRb.AddForceAtPosition(collision.relativeVelocity * 5f, contact.point, ForceMode.Impulse);
+                    }
+                }
+            }
         }
 
-        //Destroy(gameObject);
+        //Destroy(gameObject); // projectile always destroyed on hit
     }
 }

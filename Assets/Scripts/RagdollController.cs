@@ -24,10 +24,7 @@ public class RagdollController : MonoBehaviour
                 rb.isKinematic = !active;
         }
 
-        foreach (var col in ragdollColliders)
-        {
-            if (col.gameObject != this.gameObject) // skip root collider
-                col.enabled = active;
-        }
+        // Leave colliders enabled so projectiles can always hit them
     }
+
 }
