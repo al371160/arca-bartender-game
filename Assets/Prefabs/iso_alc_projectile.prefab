@@ -80,7 +80,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2728235358720339690}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2071502219022559481}
   m_SourcePrefab: {fileID: 100100000, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
+--- !u!4 &3836710221686757777 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
+  m_PrefabInstance: {fileID: 3653548372004093562}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4500621269264204587 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
@@ -133,7 +141,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &8943487333520235140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,3 +255,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2071502219022559481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4500621269264204587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: defdf6753440744e7afc03f5d5df598e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holdPoint: {fileID: 3836710221686757777}
+  pickupDistance: 3
+  pickupKey: 101
+  pourAngle: 120
+  pourRate: 0.2
+  pourEffect: {fileID: 0}
+  pourSound: {fileID: 0}
+  maxLiquid: 1
+  pourVolume: 0.7
