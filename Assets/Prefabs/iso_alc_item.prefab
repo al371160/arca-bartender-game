@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
       propertyPath: m_LocalScale.x
-      value: 160.75342
+      value: 223.27043
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
       propertyPath: m_LocalScale.y
-      value: 160.75342
+      value: 223.27043
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
       propertyPath: m_LocalScale.z
-      value: 160.75342
+      value: 223.27043
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
       propertyPath: m_LocalPosition.x
@@ -121,7 +121,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2356940605367735825}
   serializedVersion: 4
-  m_Mass: 10
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -137,9 +137,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 2
+  m_CollisionDetection: 0
 --- !u!114 &2608716715606373356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,11 +292,7 @@ MonoBehaviour:
   throwForce: 15
   upwardForce: 2
   spinTorque: 5
+  damage: 20
+  hitIgnoreDuration: 0.5
   hitSound: {fileID: 8300000, guid: 5ae87ad8d972c4e5980c9f5f6f7ced5b, type: 3}
   hitVolume: 1
-  pourAngle: 120
-  pourRate: 0.2
-  pourEffect: {fileID: 0}
-  pourSound: {fileID: 0}
-  pourVolume: 0.7
-  maxLiquid: 1

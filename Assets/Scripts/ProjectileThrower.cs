@@ -32,20 +32,19 @@ public class ProjectileThrower : MonoBehaviour
             rb.isKinematic = false;
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
 
-            // Apply forward + upward velocity
+            // Apply force with Impulse
             Vector3 finalForce = throwDir * throwForce + Vector3.up * upwardForce;
-            rb.AddForce(finalForce, ForceMode.VelocityChange);
+            rb.AddForce(finalForce, ForceMode.Impulse);
 
-            // Apply forward spin (around right axis for a "football throw" look)
-            rb.AddTorque(Camera.main.transform.right * spinTorque, ForceMode.VelocityChange);
+            // Apply spin with Impulse
+            rb.AddTorque(Camera.main.transform.right * spinTorque, ForceMode.Impulse);
 
             // Ignore self-collision
             Collider projCol = proj.GetComponent<Collider>();
             Collider throwerCol = throwOrigin.root.GetComponent<Collider>();
             if (projCol != null && throwerCol != null)
-            {
                 Physics.IgnoreCollision(projCol, throwerCol);
-            }
         }
     }
+
 }
