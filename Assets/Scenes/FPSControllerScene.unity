@@ -4754,9 +4754,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f5b4638b1584a4a9b7b275ed19747e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 1966176133}
-  throwForce: 15
-  upwardForce: 2
+  projectilePrefab: {fileID: 4500621269264204587, guid: ca18e18b1e0464214906cc80a1ab027b, type: 3}
+  throwForce: 150
+  upwardForce: 20
   spinTorque: -7
   throwOrigin: {fileID: 1359672308}
 --- !u!33 &3535369038159860169

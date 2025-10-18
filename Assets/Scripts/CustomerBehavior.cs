@@ -69,10 +69,12 @@ public class CustomerBehavior : MonoBehaviour
     {
         customerCurrentHealth -= amount;
         customerCurrentHealth = Mathf.Max(0, customerCurrentHealth);
+                Debug.Log("this brother has taken damage, current health: " + customerCurrentHealth + ""+ customerIsDead);
 
-        if (customerCurrentHealth <= 0 && !customerIsDead)
+        if (customerCurrentHealth <= 0 /*&& !customerIsDead*/)
         {
             Die();
+            Debug.Log ("this brother is dead.");
         }
     }
 

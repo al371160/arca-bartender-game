@@ -21,7 +21,7 @@ public class CustomerHealthBar : MonoBehaviour
         {
             float fillValue = (float)customer.customerCurrentHealth / customer.customerMaxHealth;
             healthFill.fillAmount = fillValue;
-            if (customer.customerCurrentHealth == 0)
+            if (customer.customerCurrentHealth <= 0)
             {
                 Destroy(gameObject); // removes health bar on death
             }
