@@ -41,17 +41,14 @@ public class RagdollController : MonoBehaviour
             ApplyHit(sourcePosition);
     }
 
-    private void ApplyHit(Vector3 sourcePosition)
+    public void ApplyHit(Vector3 sourcePosition)
     {
-        // Delay by 1 physics frame
         foreach (var rb in ragdollBodies)
         {
             if (rb.gameObject == this.gameObject) continue;
 
-            // Wake up the rigidbody just in case
             rb.WakeUp();
 
-            // Compute push direction
             Vector3 pushDir = (rb.transform.position - sourcePosition).normalized;
             pushDir.y = Mathf.Clamp(pushDir.y + upwardForce, 0f, 2f);
 

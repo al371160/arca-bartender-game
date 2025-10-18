@@ -103,10 +103,10 @@ public class CustomerBehavior : MonoBehaviour
 
     public void RegisterHit() => lastHitTime = Time.time;
 
-    /*public void ApplyHit(Vector3 hitPoint, Vector3 force)
+    public void ApplyHit(Vector3 hitPoint)
     {
-        ragdoll?.ApplyHit(hitPoint, force);
-    }*/
+        ragdoll?.ApplyHit(hitPoint);
+    }
 
     // ---------------------- Seating & Wandering ----------------------
     public void AssignSeat(Seat seat)
