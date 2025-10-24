@@ -250,5 +250,5 @@ MonoBehaviour:
   upwardForce: 2
   spinTorque: 5
   damage: 100
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 5ae87ad8d972c4e5980c9f5f6f7ced5b, type: 3}
   hitVolume: 1

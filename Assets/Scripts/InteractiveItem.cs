@@ -19,7 +19,7 @@ public class InteractiveItem : MonoBehaviour
 
     [Header("Sound Settings")]
     public AudioClip hitSound;
-    public float hitVolume = 1f;
+    public float hitVolume = 5f;
 
     private Rigidbody rb;
     private bool isHeld = false;
@@ -126,8 +126,16 @@ public class InteractiveItem : MonoBehaviour
 
         // Apply hit force (optional)
         Vector3 hitPoint = collision.contacts.Length > 0 ? collision.contacts[0].point : transform.position;
-        Vector3 force = rb.linearVelocity;
+        // Vector3 force = rb.linearVelocity;
         // customer.ApplyHit(hitPoint, force);
+
+        // Apply impact force where projectile hit
+        ContactPoint contact = collision.contacts[0];
+        Rigidbody hitRb = contact.otherCollider.attachedRigidbody;
+        if (hitRb != null)
+        {
+            hitRb.AddForceAtPosition(collision.relativeVelocity * -8f, contact.point, ForceMode.Impulse);
+        }
 
         if (hitSound != null)
             AudioSource.PlayClipAtPoint(hitSound, hitPoint, hitVolume);
