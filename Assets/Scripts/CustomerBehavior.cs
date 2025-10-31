@@ -3,14 +3,18 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 using System.Collections;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class CustomerBehavior : MonoBehaviour
 {
     [Header("Customer Settings")]
-    public bool isGood;
+    public bool isGood = true;
     public Seat seatTarget;
     public Bartender bartender;
     public GameManager gameManager;
     public UnityEvent<CustomerBehavior> OnLeave;
+
+    [Header("Drink Order")]
+    public CustomerOrder order; // The customer's requested drink
 
     [Header("Health & Ragdoll")]
     public int customerMaxHealth = 100;
@@ -26,10 +30,10 @@ public class CustomerBehavior : MonoBehaviour
     private NavMeshAgent agent;
     private bool waiting = false;
     private bool seated = false;
-    private float patience = 20f;
+    [SerializeField] private float patience = 20f; // how long before they get angry
     private float waitTimer = 0f;
     public BoxCollider wanderArea;
-    private float wanderCooldown = 3f;
+    [SerializeField] private float wanderCooldown = 3f;
     private float wanderTimer = 0f;
 
     public bool IsWandering => waiting && seatTarget == null;
@@ -38,77 +42,81 @@ public class CustomerBehavior : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         if (!ragdoll) ragdoll = GetComponent<RagdollController>();
+        if (!order) order = GetComponent<CustomerOrder>();
+        if (!gameManager) gameManager = FindFirstObjectByType<GameManager>();
+
+        customerCurrentHealth = customerMaxHealth;
     }
 
     void Update()
     {
-        if (waiting)
+        HandleWandering();
+        HandleSeating();
+    }
+
+    // ---------------------- DRINK SERVING ----------------------
+    public void ReceiveDrink(DrinkTracker cup)
+    {
+        if (order == null || cup == null)
         {
-            waitTimer += Time.deltaTime;
-            wanderTimer += Time.deltaTime;
-
-            if (wanderTimer >= wanderCooldown)
-            {
-                Wander();
-                wanderTimer = 0f;
-            }
-
-            if (waitTimer >= patience && isGood)
-                BecomeBad();
+            Debug.LogWarning($"{name} has no order or received null cup!");
+            return;
         }
 
-        if (seated && agent.remainingDistance < 0.5f)
+        if (order.CheckDrink(cup))
         {
-            seated = false;
-            StartCoroutine(DoSeatRoutine());
+            Debug.Log($"✅ {name} received the correct drink: {order.requestedRecipe.recipeName}");
+            
+            // Add tip via GameManager
+            if (gameManager)
+                gameManager.AddTip(Random.Range(3, 6));
+
+            // Customer leaves happily
+            Leave();
+            
+            // Remove served cup
+            Destroy(cup.gameObject);
+        }
+        else
+        {
+            Debug.Log($"❌ {name} got the WRONG drink!");
+            if (gameManager)
+                gameManager.ApplyPenalty(1, $"{name} was unhappy with the wrong drink!");
+
+            BecomeBad();
         }
     }
 
-    // ---------------------- Health & Hit System ----------------------
+    // ---------------------- HEALTH & HIT SYSTEM ----------------------
     public void TakeDamage(int amount)
     {
-        customerCurrentHealth -= amount;
-        customerCurrentHealth = Mathf.Max(0, customerCurrentHealth);
-                Debug.Log("this brother has taken damage, current health: " + customerCurrentHealth + ""+ customerIsDead);
+        customerCurrentHealth = Mathf.Max(0, customerCurrentHealth - amount);
+        Debug.Log($"{name} took {amount} damage (HP: {customerCurrentHealth}/{customerMaxHealth})");
 
-        if (customerCurrentHealth <= 0 /*&& !customerIsDead*/)
-        {
+        if (customerCurrentHealth <= 0)
             Die();
-            Debug.Log ("this brother is dead.");
-        }
     }
 
     private void Die()
     {
-        // Stop AI movement safely
         if (agent != null && agent.enabled && agent.isOnNavMesh)
         {
             agent.isStopped = true;
             agent.enabled = false;
         }
 
-        // Disable any wandering or seating logic
         waiting = false;
         seated = false;
 
-        // Enable ragdoll
-        if (ragdoll != null)
-            ragdoll.SetRagdoll(true);
-
+        ragdoll?.SetRagdoll(true);
         Debug.Log($"{name} has died.");
     }
 
-
     public bool CanBeHit() => Time.time - lastHitTime >= hitCooldown;
-
     public void RegisterHit() => lastHitTime = Time.time;
+    public void ApplyHit(Vector3 hitPoint) => ragdoll?.ApplyHit(hitPoint);
 
-    public void ApplyHit(Vector3 hitPoint)
-    {
-        ragdoll?.ApplyHit(hitPoint);
-    }
-
-    // ---------------------- Seating & Wandering ----------------------
+    // ---------------------- SEATING & WANDERING ----------------------
     public void AssignSeat(Seat seat)
     {
         seatTarget = seat;
@@ -143,33 +151,64 @@ public class CustomerBehavior : MonoBehaviour
         agent.SetDestination(randomPoint);
     }
 
+    private void HandleWandering()
+    {
+        if (!waiting) return;
+
+        waitTimer += Time.deltaTime;
+        wanderTimer += Time.deltaTime;
+
+        if (wanderTimer >= wanderCooldown)
+        {
+            Wander();
+            wanderTimer = 0f;
+        }
+
+        if (waitTimer >= patience && isGood)
+            BecomeBad();
+    }
+
+    private void HandleSeating()
+    {
+        if (seated && agent.remainingDistance < 0.5f)
+        {
+            seated = false;
+            StartCoroutine(DoSeatRoutine());
+        }
+    }
+
     private IEnumerator DoSeatRoutine()
     {
-        gameManager.RegisterRequest(this);
+        gameManager?.RegisterRequest(this);
 
+        // Wait while the player prepares drink
         yield return new WaitForSeconds(Random.Range(10f, 20f));
 
         if (isGood)
         {
-            gameManager.AddTip(Random.Range(1, 3));
+            // They waited patiently, small passive tip
+            gameManager?.AddTip(Random.Range(1, 3));
         }
         else
         {
-            gameManager.ApplyPenalty(1, "Bad customer caused trouble!");
-            bartender.TakeDamage(10);
+            // Angry customer penalizes the player
+            gameManager?.ApplyPenalty(1, "Bad customer caused trouble!");
+            bartender?.TakeDamage(10);
         }
 
         Leave();
     }
 
-    private void BecomeBad()
+    public void BecomeBad()
     {
+        if (!isGood) return;
         isGood = false;
         waiting = false;
         Debug.Log($"{name} became bad inside the bar!");
+        // Add optional: play angry animation, UI, etc.
     }
 
-    private void Leave()
+    public void Leave()
     {
         if (seatTarget != null)
             seatTarget.Release();

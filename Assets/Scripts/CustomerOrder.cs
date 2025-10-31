@@ -1,8 +1,8 @@
 using UnityEngine;
-using System.Linq;
 
 public class CustomerOrder : MonoBehaviour
 {
+    [Header("Order Data")]
     public DrinkRecipe requestedRecipe;
 
     public bool CheckDrink(DrinkTracker cup)
@@ -19,7 +19,6 @@ public class CustomerOrder : MonoBehaviour
                 return false;
         }
 
-        Debug.Log($"Correct drink! Served {requestedRecipe.recipeName}");
         return true;
     }
 }

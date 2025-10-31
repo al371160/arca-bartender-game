@@ -1,24 +1,32 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 
 public class IngredientMachine : MonoBehaviour
 {
     [Header("Machine Settings")]
     public Ingredient outputIngredient;
-    public float useCooldown = 1.5f;
     public float interactionRange = 2f;
+    public float dispenseTime = 2f;
     public KeyCode interactKey = KeyCode.E;
 
-    private bool canUse = true;
+    [Header("Progress UI")]
+    public Canvas progressCanvas;
+    public Image progressBar;
+
+    private bool isDispensing = false;
     private Transform playerCam;
 
     private void Start()
     {
         playerCam = Camera.main.transform;
+        if (progressCanvas != null)
+            progressCanvas.enabled = false;
     }
 
     private void Update()
     {
-        if (!canUse || outputIngredient == null || playerCam == null)
+        if (isDispensing || outputIngredient == null || playerCam == null)
             return;
 
         if (Input.GetKeyDown(interactKey))
@@ -29,16 +37,14 @@ public class IngredientMachine : MonoBehaviour
 
     private void TryUseMachine()
     {
-        // Raycast from camera to check if looking at this machine
         if (Physics.Raycast(playerCam.position, playerCam.forward, out RaycastHit hit, interactionRange))
         {
             if (hit.collider.gameObject == gameObject)
             {
-                // Find the held item
                 InteractiveItem heldItem = FindHeldItem();
                 if (heldItem != null && heldItem.TryGetComponent(out DrinkTracker cup))
                 {
-                    AddIngredientToCup(cup);
+                    StartCoroutine(DispenseRoutine(cup));
                 }
             }
         }
@@ -46,32 +52,39 @@ public class IngredientMachine : MonoBehaviour
 
     private InteractiveItem FindHeldItem()
     {
-        // Find any InteractiveItem currently parented under the player's holdPoint
-        InteractiveItem[] allItems = FindObjectsOfType<InteractiveItem>();
+        InteractiveItem[] allItems = FindObjectsByType<InteractiveItem>(FindObjectsSortMode.None);
         foreach (var item in allItems)
         {
-            if (item.transform.parent != null && item.isActiveAndEnabled)
+            if (item.transform.parent != null && item.transform.parent.name.Contains("Hold"))
             {
-                // We assume only one is held at a time
-                Debug.Log(item);
                 return item;
             }
         }
         return null;
     }
 
-    private void AddIngredientToCup(DrinkTracker cup)
+    private IEnumerator DispenseRoutine(DrinkTracker cup)
     {
-        cup.AddIngredient(outputIngredient);
-        Debug.Log($"Added {outputIngredient.ingredientName} to {cup.gameObject.name}");
-        StartCoroutine(Cooldown());
-    }
+        isDispensing = true;
 
-    private System.Collections.IEnumerator Cooldown()
-    {
-        canUse = false;
-        yield return new WaitForSeconds(useCooldown);
-        canUse = true;
+        if (progressCanvas != null) progressCanvas.enabled = true;
+        if (progressBar != null) progressBar.fillAmount = 0f;
+
+        float elapsed = 0f;
+        while (elapsed < dispenseTime)
+        {
+            elapsed += Time.deltaTime;
+            if (progressBar != null)
+                progressBar.fillAmount = Mathf.Clamp01(elapsed / dispenseTime);
+            yield return null;
+        }
+
+        cup.AddIngredient(outputIngredient);
+
+        if (progressCanvas != null) progressCanvas.enabled = false;
+        isDispensing = false;
+
+        Debug.Log($"Added {outputIngredient.ingredientName} to {cup.gameObject.name}");
     }
 
     private void OnDrawGizmosSelected()

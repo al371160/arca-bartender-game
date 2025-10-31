@@ -4083,7 +4083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216e1a1dbd7c949d5a98841deee0c17e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPoint: {fileID: 1359672308}
+  holdPoint: {fileID: 543450652583773341}
   pickupRange: 3
   pickupKey: 101
   throwForce: 8
@@ -4376,8 +4376,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148123147815}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0458869, y: -0.44571558, z: -0.70603466, w: 0.54840416}
-  m_LocalPosition: {x: 0.267, y: -0.214, z: 0.42}
+  m_LocalRotation: {x: 0.10673323, y: 0.7073912, z: -0.2806751, w: -0.63986504}
+  m_LocalPosition: {x: 0.24, y: -0.36, z: 0.5}
   m_LocalScale: {x: 136.24, y: 136.24, z: 136.24}
   m_ConstrainProportionsScale: 0
   m_Children: []

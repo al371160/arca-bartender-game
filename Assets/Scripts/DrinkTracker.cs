@@ -11,6 +11,21 @@ public class DrinkTracker : MonoBehaviour
     public Renderer cupRenderer;
     public Transform liquidParent;
 
+    private List<GameObject> liquidLayers = new List<GameObject>();
+
+    void Start()
+    {
+        // Cache child layers for quick access
+        if (liquidParent != null)
+        {
+            foreach (Transform child in liquidParent)
+            {
+                liquidLayers.Add(child.gameObject);
+                child.gameObject.SetActive(false);
+            }
+        }
+    }
+
     public void AddIngredient(Ingredient newIngredient)
     {
         if (newIngredient == null) return;
@@ -32,14 +47,16 @@ public class DrinkTracker : MonoBehaviour
             cupRenderer.material.color = ingredient.color;
         }
 
-        // Optional: instantiate layered liquids
-        if (liquidParent != null)
+        // Activate the next available layer
+        if (liquidLayers.Count > ingredients.Count - 1)
         {
-            GameObject layer = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            layer.transform.SetParent(liquidParent, false);
-            layer.transform.localScale = new Vector3(0.9f, 0.1f, 0.9f);
-            layer.transform.localPosition = new Vector3(0, ingredients.Count * 0.1f, 0);
-            layer.GetComponent<Renderer>().material.color = ingredient.color;
+            GameObject layer = liquidLayers[ingredients.Count - 1];
+            if (layer != null)
+            {
+                layer.SetActive(true);
+                Renderer r = layer.GetComponent<Renderer>();
+                if (r != null) r.material.color = ingredient.color;
+            }
         }
     }
 }
