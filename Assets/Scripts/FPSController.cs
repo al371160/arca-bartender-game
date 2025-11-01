@@ -1,8 +1,11 @@
+using System.Net;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 public class FPSController : MonoBehaviour
 {
+    public TimeSlow timeManager; //Added Time Manager
+
     [Header("Movement Settings")]
     public float speed = 5.0f;
     [Range(0f, 1f)] public float midAirControl = 0.5f;
@@ -50,6 +53,7 @@ public class FPSController : MonoBehaviour
         HandleMouseLook();
         HandleMovement();
         HandleActions();
+        DoTimeSlow();
         Debug.Log(heldItem);
     }
 
@@ -140,4 +144,16 @@ public class FPSController : MonoBehaviour
             heldItem = null; // let go of it
         }
     }
+
+    // --- Time Managing Script ---
+    public void DoTimeSlow()
+    {
+        if (Input.GetKeyDown(KeyCode.Z)) //Z activates TimeSlow
+        {
+            Debug.Log("Z was pressed!");
+            timeManager.DoSlowMotion();    
+        }
+            
+    }
+
 }
