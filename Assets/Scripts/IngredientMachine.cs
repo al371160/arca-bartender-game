@@ -19,9 +19,10 @@ public class IngredientMachine : MonoBehaviour
 
     private void Start()
     {
-        playerCam = Camera.main.transform;
+        playerCam = Camera.main?.transform;
         if (progressCanvas != null)
             progressCanvas.enabled = false;
+
     }
 
     private void Update()
@@ -39,15 +40,28 @@ public class IngredientMachine : MonoBehaviour
     {
         if (Physics.Raycast(playerCam.position, playerCam.forward, out RaycastHit hit, interactionRange))
         {
+
+
             if (hit.collider.gameObject == gameObject)
             {
+
                 InteractiveItem heldItem = FindHeldItem();
-                if (heldItem != null && heldItem.TryGetComponent(out DrinkTracker cup))
+
+                if (heldItem != null)
                 {
-                    StartCoroutine(DispenseRoutine(cup));
+                    if (heldItem.TryGetComponent(out DrinkTracker cup))
+                    {
+                        StartCoroutine(DispenseRoutine(cup));
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"[{name}] No held item found (nothing parented to 'itemOrientation').");
                 }
             }
+
         }
+
     }
 
     private InteractiveItem FindHeldItem()
@@ -55,17 +69,19 @@ public class IngredientMachine : MonoBehaviour
         InteractiveItem[] allItems = FindObjectsByType<InteractiveItem>(FindObjectsSortMode.None);
         foreach (var item in allItems)
         {
-            if (item.transform.parent != null && item.transform.parent.name.Contains("Hold"))
+            if (item.transform.parent != null && item.transform.parent.name.Contains("itemOrientation"))
             {
                 return item;
             }
         }
+
         return null;
     }
 
     private IEnumerator DispenseRoutine(DrinkTracker cup)
     {
         isDispensing = true;
+        Debug.Log($"[{name}] Dispensing {outputIngredient.ingredientName} into {cup.name}...");
 
         if (progressCanvas != null) progressCanvas.enabled = true;
         if (progressBar != null) progressBar.fillAmount = 0f;
@@ -84,7 +100,6 @@ public class IngredientMachine : MonoBehaviour
         if (progressCanvas != null) progressCanvas.enabled = false;
         isDispensing = false;
 
-        Debug.Log($"Added {outputIngredient.ingredientName} to {cup.gameObject.name}");
     }
 
     private void OnDrawGizmosSelected()

@@ -436,6 +436,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &227338902 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 715264207910051691, guid: a62102bf98b88456c925d3b187d028f6, type: 3}
+  m_PrefabInstance: {fileID: 4872986184713885405}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &227338908
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227338902}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: dd7d3b4dfc8ed4e64a2054fa2bcf8b4a, type: 3}
+  m_Controller: {fileID: 9100000, guid: 9a92ac33b126f4b17a1f888bfd535206, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &256897607
 GameObject:
   m_ObjectHideFlags: 0
@@ -3744,6 +3771,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drinkName: 
   ingredients: []
+  allRecipes:
+  - {fileID: 11400000, guid: 6ae06c41f8c2d47b89202dd52aa990af, type: 2}
   cupRenderer: {fileID: 1707162011}
   liquidParent: {fileID: 1049853287}
 --- !u!114 &2022771181
@@ -5357,10 +5386,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8503654676784448055, guid: a62102bf98b88456c925d3b187d028f6, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 227338908}
+    - target: {fileID: 8503654676784448055, guid: a62102bf98b88456c925d3b187d028f6, type: 3}
+      propertyPath: punchHitSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 5ae87ad8d972c4e5980c9f5f6f7ced5b, type: 3}
+    m_RemovedComponents:
+    - {fileID: 2685124817214395050, guid: a62102bf98b88456c925d3b187d028f6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 715264207910051691, guid: a62102bf98b88456c925d3b187d028f6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 227338908}
   m_SourcePrefab: {fileID: 100100000, guid: a62102bf98b88456c925d3b187d028f6, type: 3}
 --- !u!33 &5067976887203650093
 MeshFilter:
