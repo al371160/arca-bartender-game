@@ -1,10 +1,10 @@
-using System.Net;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 public class FPSController : MonoBehaviour
 {
-    public TimeSlow timeManager; //Added Time Manager
+    [Header("Time Manager")]
+    public TimeSlow timeManager; // Optional time slow manager
 
     [Header("Movement Settings")]
     public float speed = 5.0f;
@@ -25,12 +25,21 @@ public class FPSController : MonoBehaviour
     public string throwTrigger2 = "Throw2";
     public string blockBool = "Blocking";
 
+    [Header("Punch Settings")]
+    public float punchRange = 2f;
+    public float punchRadius = 0.8f;
+    public int punchDamage = 25;
+    public AudioClip punchSwingSound;
+    public AudioClip punchHitSound;
+    public ParticleSystem punchImpactEffect;
+
     [Header("References")]
     public Camera playerCamera;
     public Animator animator;
-    public Transform holdPoint; // Assign this to your hand bone or camera child
+    public Transform holdPoint;
 
-     public InteractiveItem heldItem; // reference to currently held item
+    [Header("Held Item")]
+    public InteractiveItem heldItem; // reference to currently held item
 
     private CharacterController characterController;
     private float verticalRotation = 0f;
@@ -53,10 +62,10 @@ public class FPSController : MonoBehaviour
         HandleMouseLook();
         HandleMovement();
         HandleActions();
-        DoTimeSlow();
-        Debug.Log(heldItem);
+        HandleTimeSlow();
     }
 
+    #region Movement & Camera
     void HandleMouseLook()
     {
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
@@ -97,31 +106,31 @@ public class FPSController : MonoBehaviour
         if (animator != null)
             animator.SetFloat("Speed", new Vector2(horizontal, vertical).magnitude);
     }
+    #endregion
 
+    #region Actions: Punch, Throw, Block
     void HandleActions()
     {
         if (animator == null) return;
 
-        // --- Left click: Punch OR Throw ---
+        // Left click: Punch or Throw
         if (Input.GetMouseButtonDown(0) && !isBlocking)
         {
             if (heldItem != null)
             {
                 string chosenThrow = (Random.value < 0.5f) ? throwTrigger1 : throwTrigger2;
                 animator.SetTrigger(chosenThrow);
-                // Only throw if holding an item
+                // Perform throw immediately (or via animation event)
                 heldItem.Throw();
                 heldItem = null;
             }
             else
             {
-                // Normal punch
                 animator.SetTrigger(punchTrigger);
             }
         }
 
-
-        // --- Block ---
+        // Block
         if (Input.GetKeyDown(KeyCode.Q))
         {
             isBlocking = true;
@@ -134,26 +143,63 @@ public class FPSController : MonoBehaviour
         }
     }
 
+    // Animation Event: called during punch animation
+    public void PerformPunch()
+    {
+        // Swing sound
+        if (punchSwingSound)
+            AudioSource.PlayClipAtPoint(punchSwingSound, playerCamera.transform.position);
 
-    // --- Animation Event: Called at release frame of throw animation ---
+        RaycastHit hit;
+        Vector3 origin = playerCamera.transform.position;
+        Vector3 direction = playerCamera.transform.forward;
+
+        if (Physics.SphereCast(origin, punchRadius, direction, out hit, punchRange))
+        {
+            Debug.Log("Punched: " + hit.collider.name);
+
+            CustomerBehavior target = hit.collider.GetComponentInParent<CustomerBehavior>();
+            if (target != null && target.CanBeHit())
+            {
+                target.TakeDamage(punchDamage);
+                target.RegisterHit();
+                target.ApplyHit(hit.point);
+
+                if (punchHitSound)
+                    AudioSource.PlayClipAtPoint(punchHitSound, hit.point);
+
+                if (punchImpactEffect)
+                    Instantiate(punchImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+            }
+            else
+            {
+                if (punchHitSound)
+                    AudioSource.PlayClipAtPoint(punchHitSound, hit.point);
+            }
+        }
+    }
+
+    // Animation Event: called at release frame of throw animation
     public void PerformThrow()
     {
         if (heldItem != null)
         {
             heldItem.Throw();
-            heldItem = null; // let go of it
+            heldItem = null;
         }
     }
+    #endregion
 
-    // --- Time Managing Script ---
-    public void DoTimeSlow()
+    #region Time Slow
+    void HandleTimeSlow()
     {
-        if (Input.GetKeyDown(KeyCode.Z)) //Z activates TimeSlow
-        {
-            Debug.Log("Z was pressed!");
-            timeManager.DoSlowMotion();    
-        }
-            
-    }
+        if (timeManager == null) return;
 
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            Debug.Log("Time Slow activated!");
+            timeManager.DoSlowMotion();
+        }
+    }
+    #endregion
 }
