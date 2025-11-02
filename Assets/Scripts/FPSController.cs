@@ -4,7 +4,7 @@ using UnityEngine;
 public class FPSController : MonoBehaviour
 {
     [Header("Time Manager")]
-    public TimeSlow timeManager; // Optional time slow manager
+    public TimeSlow timeManager;
 
     [Header("Movement Settings")]
     public float speed = 5.0f;
@@ -35,24 +35,25 @@ public class FPSController : MonoBehaviour
 
     [Header("References")]
     public Camera playerCamera;
-    public Animator animator;
-    public Transform holdPoint;
+    public Animator leftArmAnimator;
+    public Animator rightArmAnimator;
+    public Transform leftHoldPoint;
+    public Transform rightHoldPoint;
 
-    [Header("Held Item")]
-    public InteractiveItem heldItem; // reference to currently held item
+    [Header("Held Items")]
+    public InteractiveItem leftHeldItem;
+    public InteractiveItem rightHeldItem;
 
-    private CharacterController characterController;
+    private CharacterController controller;
     private float verticalRotation = 0f;
-    private Vector3 playerVelocity;
+    private Vector3 velocity;
     private bool wasGrounded;
     private bool isBlocking;
 
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
+        controller = GetComponent<CharacterController>();
         if (playerCamera == null) playerCamera = Camera.main;
-        if (animator == null) animator = GetComponent<Animator>();
-
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -80,126 +81,193 @@ public class FPSController : MonoBehaviour
 
     void HandleMovement()
     {
-        wasGrounded = characterController.isGrounded;
-        if (wasGrounded && playerVelocity.y < 0) playerVelocity.y = -2f;
+        wasGrounded = controller.isGrounded;
+        if (wasGrounded && velocity.y < 0) velocity.y = -2f;
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         Vector3 desiredMove = transform.right * horizontal + transform.forward * vertical;
 
-        Vector3 horizontalVelocity = new Vector3(playerVelocity.x, 0f, playerVelocity.z);
+        Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
 
         if (wasGrounded)
             horizontalVelocity = desiredMove * speed;
         else
             horizontalVelocity = Vector3.Lerp(horizontalVelocity, desiredMove * speed, midAirControl);
 
-        playerVelocity.x = horizontalVelocity.x;
-        playerVelocity.z = horizontalVelocity.z;
+        velocity.x = horizontalVelocity.x;
+        velocity.z = horizontalVelocity.z;
 
         if (wasGrounded && Input.GetButtonDown("Jump"))
-            playerVelocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
 
-        playerVelocity.y += gravity * Time.deltaTime;
-        characterController.Move(playerVelocity * Time.deltaTime);
-
-        if (animator != null)
-            animator.SetFloat("Speed", new Vector2(horizontal, vertical).magnitude);
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
     }
     #endregion
 
-    #region Actions: Punch, Throw, Block
+    #region Actions
     void HandleActions()
     {
-        if (animator == null) return;
+        bool leftShift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
-        // Left click: Punch or Throw
-        if (Input.GetMouseButtonDown(0) && !isBlocking)
+        // ---- PICKUP / DROP ----
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            if (heldItem != null)
+            TryPickupOrDrop(leftShift); // shift = left hand
+        }
+
+        // ---- LEFT CLICK ----
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (leftShift) // Shift + Click = left hand action
             {
-                string chosenThrow = (Random.value < 0.5f) ? throwTrigger1 : throwTrigger2;
-                animator.SetTrigger(chosenThrow);
-                // Perform throw immediately (or via animation event)
-                heldItem.Throw();
-                heldItem = null;
+                if (leftHeldItem != null)
+                {
+                    ThrowItem(leftHeldItem, leftArmAnimator);
+                    leftHeldItem = null;
+                }
+                else if (!isBlocking)
+                {
+                    PunchRandomHand();
+                }
             }
-            else
+            else // Click without shift = right hand action
             {
-                animator.SetTrigger(punchTrigger);
+                if (rightHeldItem != null)
+                {
+                    ThrowItem(rightHeldItem, rightArmAnimator);
+                    rightHeldItem = null;
+                }
+                else if (!isBlocking)
+                {
+                    PunchRandomHand();
+                }
             }
         }
 
-        // Block
+        // ---- BLOCK ----
         if (Input.GetKeyDown(KeyCode.Q))
         {
             isBlocking = true;
-            animator.SetBool(blockBool, true);
+            SetBothArmsBool(blockBool, true);
         }
         else if (Input.GetKeyUp(KeyCode.Q))
         {
             isBlocking = false;
-            animator.SetBool(blockBool, false);
+            SetBothArmsBool(blockBool, false);
         }
     }
 
-    // Animation Event: called during punch animation
+    // ----------------- PUNCH -----------------
+    void PunchRandomHand()
+    {
+        // Only punch randomly if both hands are empty
+        if (leftHeldItem != null && rightHeldItem != null)
+            return; // both hands full, no punch
+
+        bool useLeft;
+
+        if (leftHeldItem != null) // left hand occupied, punch right hand
+            useLeft = false;
+        else if (rightHeldItem != null) // right hand occupied, punch left hand
+            useLeft = true;
+        else
+            useLeft = Random.value < 0.5f; // both hands free, random
+
+        if (useLeft && leftArmAnimator)
+            leftArmAnimator.SetTrigger(punchTrigger);
+        else if (!useLeft && rightArmAnimator)
+            rightArmAnimator.SetTrigger(punchTrigger);
+
+        PerformPunch();
+    }
+
+
+    void TryPickupOrDrop(bool leftHand)
+    {
+        Camera cam = playerCamera;
+        if (cam == null) return;
+
+        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+        if (Physics.Raycast(ray, out RaycastHit hit, 3f))
+        {
+            InteractiveItem hitItem = hit.collider.GetComponent<InteractiveItem>();
+            InteractiveItem currentItem = leftHand ? leftHeldItem : rightHeldItem;
+
+            if (hitItem != null)
+            {
+                // Only drop the currently held item if hitting a new item
+                if (currentItem != null)
+                    currentItem.Drop();
+
+                // Pick up the new item
+                hitItem.PickupToCustomHoldPoint(leftHand);
+                if (leftHand) leftHeldItem = hitItem;
+                else rightHeldItem = hitItem;
+            }
+        }
+    }
+
+
+    void ThrowItem(InteractiveItem item, Animator arm)
+    {
+        string trigger = (Random.value < 0.5f) ? throwTrigger1 : throwTrigger2;
+        if (arm) arm.SetTrigger(trigger);
+        item.Throw();
+    }
+
+    void PunchBoth()
+    {
+        if (leftArmAnimator) leftArmAnimator.SetTrigger(punchTrigger);
+        if (rightArmAnimator) rightArmAnimator.SetTrigger(punchTrigger);
+        PerformPunch();
+    }
+    #endregion
+
+    #region Punch Detection
     public void PerformPunch()
     {
-        // Swing sound
+        // Play swing sound
         if (punchSwingSound)
             AudioSource.PlayClipAtPoint(punchSwingSound, playerCamera.transform.position);
 
-        RaycastHit hit;
-        Vector3 origin = playerCamera.transform.position;
-        Vector3 direction = playerCamera.transform.forward;
-
-        if (Physics.SphereCast(origin, punchRadius, direction, out hit, punchRange))
+        // SphereCast for punch
+        if (Physics.SphereCast(playerCamera.transform.position, punchRadius, playerCamera.transform.forward, out RaycastHit hit, punchRange))
         {
-            Debug.Log("Punched: " + hit.collider.name);
-
             CustomerBehavior target = hit.collider.GetComponentInParent<CustomerBehavior>();
             if (target != null && target.CanBeHit())
             {
+                // Deal damage
                 target.TakeDamage(punchDamage);
                 target.RegisterHit();
                 target.ApplyHit(hit.point);
 
+                // Impact feedback
                 if (punchHitSound)
                     AudioSource.PlayClipAtPoint(punchHitSound, hit.point);
-
                 if (punchImpactEffect)
                     Instantiate(punchImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
             }
-            else
-            {
-                if (punchHitSound)
-                    AudioSource.PlayClipAtPoint(punchHitSound, hit.point);
-            }
         }
     }
 
-    // Animation Event: called at release frame of throw animation
-    public void PerformThrow()
-    {
-        if (heldItem != null)
-        {
-            heldItem.Throw();
-            heldItem = null;
-        }
-    }
     #endregion
 
     #region Time Slow
     void HandleTimeSlow()
     {
         if (timeManager == null) return;
-
         if (Input.GetKeyDown(KeyCode.Z))
-        {
-            Debug.Log("Time Slow activated!");
             timeManager.DoSlowMotion();
-        }
+    }
+    #endregion
+
+    #region Helpers
+    void SetBothArmsBool(string boolName, bool value)
+    {
+        if (leftArmAnimator) leftArmAnimator.SetBool(boolName, value);
+        if (rightArmAnimator) rightArmAnimator.SetBool(boolName, value);
     }
     #endregion
 }

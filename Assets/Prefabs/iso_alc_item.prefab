@@ -76,12 +76,6 @@ PrefabInstance:
       addedObject: {fileID: 655483676988775317}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2608716715606373356}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5581176988093472750}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 9215792951900751583}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 46504778fc4974796bce942bda02f8ef, type: 3}
       insertIndex: -1
@@ -140,43 +134,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2608716715606373356
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2356940605367735825}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e899a0807eafc4692a7342a20e41851f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 50
-  lifeTime: 10
-  hitSound: {fileID: 8300000, guid: 5ae87ad8d972c4e5980c9f5f6f7ced5b, type: 3}
-  volume: 1
---- !u!114 &5581176988093472750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2356940605367735825}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: defdf6753440744e7afc03f5d5df598e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  holdPoint: {fileID: 0}
-  pickupRange: 3
-  pickupKey: 101
-  pourAngle: 120
-  pourRate: 0.2
-  pourEffect: {fileID: 0}
-  pourSound: {fileID: 0}
-  maxLiquid: 1
-  pourVolume: 0.7
 --- !u!82 &9215792951900751583
 AudioSource:
   m_ObjectHideFlags: 0
@@ -286,13 +243,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216e1a1dbd7c949d5a98841deee0c17e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPoint: {fileID: 0}
   pickupRange: 3
   pickupKey: 101
   throwForce: 15
   upwardForce: 2
   spinTorque: 5
+  throwCooldown: 0.3
+  alignWithCamera: 1
   damage: 20
-  hitIgnoreDuration: 0.5
   hitSound: {fileID: 8300000, guid: 5ae87ad8d972c4e5980c9f5f6f7ced5b, type: 3}
   hitVolume: 1
