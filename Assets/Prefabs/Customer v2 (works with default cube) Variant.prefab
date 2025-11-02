@@ -76,10 +76,18 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6052609152828347535, guid: 71669139603b64cef8cd7064e16c737f, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6090528417552615945, guid: 71669139603b64cef8cd7064e16c737f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 44f9acb8182fe4619aa234526034a588, type: 2}
+    - target: {fileID: 7082800335083003613, guid: 71669139603b64cef8cd7064e16c737f, type: 3}
+      propertyPath: m_Speed
+      value: 1.6
+      objectReference: {fileID: 0}
     - target: {fileID: 8107693010112605282, guid: 71669139603b64cef8cd7064e16c737f, type: 3}
       propertyPath: m_Enabled
       value: 1

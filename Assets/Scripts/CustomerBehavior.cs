@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using System.Collections;
 
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(Animator))]
 public class CustomerBehavior : MonoBehaviour
 {
     [Header("Customer Settings")]
@@ -28,6 +29,7 @@ public class CustomerBehavior : MonoBehaviour
 
     [Header("Wandering")]
     private NavMeshAgent agent;
+    private Animator animator;
     private bool waiting = false;
     private bool seated = false;
     [SerializeField] private float patience = 20f; // how long before they get angry
@@ -36,11 +38,18 @@ public class CustomerBehavior : MonoBehaviour
     [SerializeField] private float wanderCooldown = 3f;
     private float wanderTimer = 0f;
 
+    // ---------------- ANIMATOR PARAMETERS ----------------
+    private readonly int animWalking = Animator.StringToHash("Walking");
+    private readonly int animSitting = Animator.StringToHash("Sitting");
+    private readonly int animAngry = Animator.StringToHash("Angry");
+    private readonly int animLeaving = Animator.StringToHash("Leaving");
+
     public bool IsWandering => waiting && seatTarget == null;
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
         if (!ragdoll) ragdoll = GetComponent<RagdollController>();
         if (!order) order = GetComponent<CustomerOrder>();
         if (!gameManager) gameManager = FindFirstObjectByType<GameManager>();
@@ -52,6 +61,17 @@ public class CustomerBehavior : MonoBehaviour
     {
         HandleWandering();
         HandleSeating();
+        UpdateAnimation();
+    }
+
+    // ---------------------- ANIMATION UPDATES ----------------------
+    private void UpdateAnimation()
+    {
+        if (customerIsDead) return;
+
+        animator.SetBool(animWalking, agent.velocity.magnitude > 0.1f);
+        animator.SetBool(animSitting, seated && agent.remainingDistance < 0.5f);
+        animator.SetBool(animAngry, !isGood && !seated);
     }
 
     // ---------------------- DRINK SERVING ----------------------
@@ -67,14 +87,11 @@ public class CustomerBehavior : MonoBehaviour
         {
             Debug.Log($"✅ {name} received the correct drink: {order.requestedRecipe.recipeName}");
             
-            // Add tip via GameManager
             if (gameManager)
                 gameManager.AddTip(Random.Range(3, 6));
 
-            // Customer leaves happily
             Leave();
-            
-            // Remove served cup
+
             Destroy(cup.gameObject);
         }
         else
@@ -110,6 +127,8 @@ public class CustomerBehavior : MonoBehaviour
 
         ragdoll?.SetRagdoll(true);
         Debug.Log($"{name} has died.");
+
+        animator.enabled = false; // Stop animations
     }
 
     public bool CanBeHit() => Time.time - lastHitTime >= hitCooldown;
@@ -121,8 +140,8 @@ public class CustomerBehavior : MonoBehaviour
     {
         seatTarget = seat;
         waiting = false;
-        agent.SetDestination(seat.transform.position);
         seated = true;
+        agent.SetDestination(seat.transform.position);
         seatTarget.Claim(this);
     }
 
@@ -172,7 +191,6 @@ public class CustomerBehavior : MonoBehaviour
     {
         if (seated && agent.remainingDistance < 0.5f)
         {
-            seated = false;
             StartCoroutine(DoSeatRoutine());
         }
     }
@@ -186,12 +204,10 @@ public class CustomerBehavior : MonoBehaviour
 
         if (isGood)
         {
-            // They waited patiently, small passive tip
             gameManager?.AddTip(Random.Range(1, 3));
         }
         else
         {
-            // Angry customer penalizes the player
             gameManager?.ApplyPenalty(1, "Bad customer caused trouble!");
             bartender?.TakeDamage(10);
         }
@@ -205,7 +221,6 @@ public class CustomerBehavior : MonoBehaviour
         isGood = false;
         waiting = false;
         Debug.Log($"{name} became bad inside the bar!");
-        // Add optional: play angry animation, UI, etc.
     }
 
     public void Leave()
@@ -213,7 +228,10 @@ public class CustomerBehavior : MonoBehaviour
         if (seatTarget != null)
             seatTarget.Release();
 
+        animator.SetTrigger(animLeaving); // Trigger leaving animation
         OnLeave?.Invoke(this);
-        Destroy(gameObject);
+
+        // Optional: delay destruction for animation
+        Destroy(gameObject, 1f);
     }
 }

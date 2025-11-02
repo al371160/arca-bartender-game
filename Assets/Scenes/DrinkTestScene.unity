@@ -476,7 +476,7 @@ GameObject:
   - component: {fileID: 256897610}
   - component: {fileID: 256897609}
   - component: {fileID: 256897612}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -492,8 +492,8 @@ Transform:
   m_GameObject: {fileID: 256897607}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.002091527, y: -2.11, z: -2.2199998}
-  m_LocalScale: {x: 0.77019, y: 0.5025952, z: 0.77019}
+  m_LocalPosition: {x: -0.002091527, y: -2.16, z: -2.2199998}
+  m_LocalScale: {x: 0.3481182, y: 0.32467106, z: 0.3481182}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 901385603}
@@ -816,7 +816,7 @@ GameObject:
   - component: {fileID: 287332861}
   - component: {fileID: 287332860}
   - component: {fileID: 287332863}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -832,8 +832,8 @@ Transform:
   m_GameObject: {fileID: 287332858}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.7745316, y: -2.11, z: -2.2199998}
-  m_LocalScale: {x: 0.77019, y: 0.5025952, z: 0.77019}
+  m_LocalPosition: {x: -1.7745316, y: -2.16, z: -2.2199998}
+  m_LocalScale: {x: 0.3481182, y: 0.32467106, z: 0.3481182}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 901385603}
@@ -1117,7 +1117,7 @@ GameObject:
   - component: {fileID: 449878416}
   - component: {fileID: 449878415}
   - component: {fileID: 449878414}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1330,7 +1330,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 715858405}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wine_object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1445,9 +1445,101 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8600266521469957442, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -8213000250728357061, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -6161123134044351923, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -5908061210657862413, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -5379112460833130928, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -3556442628319407063, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -3539857272218722427, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -3446421694052758978, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -3150741873922344831, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -2971581953478934998, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -2179093105513377763, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -2108971386342365689, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -1899756936311870211, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -1499549837338632917, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 342875487313113022, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 619009582623158317, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
       propertyPath: m_Name
       value: bar_glasses_scene
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2980012937118530547, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044993546602174400, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4186612336126250255, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4697568120249485737, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4840150427112534427, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5971209243353089377, guid: 72ca9ddc7c25b4f299e70e54b64449e1, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1715,7 +1807,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_GenerateLinks: 0
@@ -1724,9 +1816,9 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.046666667
+  m_VoxelSize: 0.060000002
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 0bdd1df0dfd294faaa2cd90b869dfd5a, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: cb39784e9c18d4d16831de05c4b6fcee, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &906042674
 Transform:
@@ -2002,7 +2094,7 @@ GameObject:
   - component: {fileID: 1038269006}
   - component: {fileID: 1038269005}
   - component: {fileID: 1038269004}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: door (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2278,7 +2370,7 @@ GameObject:
   - component: {fileID: 1314810172}
   - component: {fileID: 1314810171}
   - component: {fileID: 1314810174}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2294,8 +2386,8 @@ Transform:
   m_GameObject: {fileID: 1314810169}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.7703485, y: -2.11, z: -2.2199998}
-  m_LocalScale: {x: 0.77019, y: 0.5025952, z: 0.77019}
+  m_LocalPosition: {x: 1.7703485, y: -2.16, z: -2.2199998}
+  m_LocalScale: {x: 0.3481182, y: 0.32467106, z: 0.3481182}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 901385603}
@@ -2718,7 +2810,7 @@ GameObject:
   - component: {fileID: 1566967791}
   - component: {fileID: 1566967790}
   - component: {fileID: 1566967793}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2734,8 +2826,8 @@ Transform:
   m_GameObject: {fileID: 1566967788}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.5185084, y: -2.11, z: -2.2200003}
-  m_LocalScale: {x: 0.77019, y: 0.5025952, z: 0.77019}
+  m_LocalPosition: {x: 3.5185084, y: -2.16, z: -2.2200003}
+  m_LocalScale: {x: 0.3481182, y: 0.32467106, z: 0.3481182}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 901385603}
@@ -2949,7 +3041,7 @@ GameObject:
   - component: {fileID: 1624030576}
   - component: {fileID: 1624030575}
   - component: {fileID: 1624030578}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2965,8 +3057,8 @@ Transform:
   m_GameObject: {fileID: 1624030573}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.5226917, y: -2.11, z: -2.2199998}
-  m_LocalScale: {x: 0.77019, y: 0.5025952, z: 0.77019}
+  m_LocalPosition: {x: -3.5226917, y: -2.16, z: -2.2199998}
+  m_LocalScale: {x: 0.3481182, y: 0.32467106, z: 0.3481182}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 901385603}
@@ -3289,7 +3381,7 @@ GameObject:
   - component: {fileID: 1745834224}
   - component: {fileID: 1745834223}
   - component: {fileID: 1745834222}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: door (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3400,7 +3492,7 @@ GameObject:
   - component: {fileID: 1966176135}
   - component: {fileID: 1966176139}
   - component: {fileID: 1966176140}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5125,7 +5217,7 @@ GameObject:
   - component: {fileID: 8464722246093288007}
   - component: {fileID: 8464722246093288006}
   - component: {fileID: 8464722246093288008}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wine1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6708,7 +6800,7 @@ GameObject:
   - component: {fileID: 8199803510487586122}
   - component: {fileID: 8199803510487586121}
   - component: {fileID: 8199803510487586123}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8178,7 +8270,7 @@ GameObject:
   - component: {fileID: 8835409690184409402}
   - component: {fileID: 8835409690184409401}
   - component: {fileID: 8835409690184409403}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: wine2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
