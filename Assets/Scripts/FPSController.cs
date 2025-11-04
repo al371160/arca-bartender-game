@@ -103,6 +103,12 @@ public class FPSController : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+
+        //Time Slow Test with Movement
+        /*if (desiredMove == Vector3.zero)
+        { 
+            timeManager.DoSlowMotion();
+        }*/
     }
     #endregion
 
