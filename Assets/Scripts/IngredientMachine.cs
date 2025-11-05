@@ -69,7 +69,7 @@ public class IngredientMachine : MonoBehaviour
         InteractiveItem[] allItems = FindObjectsByType<InteractiveItem>(FindObjectsSortMode.None);
         foreach (var item in allItems)
         {
-            if (item.transform.parent != null && item.transform.parent.name.Contains("itemOrientation"))
+            if (item.transform.parent != null && item.transform.parent.name.Contains("rightItemOrientation"))
             {
                 return item;
             }

@@ -218,10 +218,13 @@ public class FPSController : MonoBehaviour
 
     void ThrowItem(InteractiveItem item, Animator arm)
     {
+        if (timeManager) timeManager.ResumeTimeTemporarily(0.4f);
+
         string trigger = (Random.value < 0.5f) ? throwTrigger1 : throwTrigger2;
         if (arm) arm.SetTrigger(trigger);
         item.Throw();
     }
+
 
     void PunchBoth()
     {
@@ -234,6 +237,9 @@ public class FPSController : MonoBehaviour
     #region Punch Detection
     public void PerformPunch()
     {
+        // Resume time briefly
+        if (timeManager) timeManager.ResumeTimeTemporarily(0.35f);
+
         // Play swing sound
         if (punchSwingSound)
             AudioSource.PlayClipAtPoint(punchSwingSound, playerCamera.transform.position);
@@ -244,12 +250,10 @@ public class FPSController : MonoBehaviour
             CustomerBehavior target = hit.collider.GetComponentInParent<CustomerBehavior>();
             if (target != null && target.CanBeHit())
             {
-                // Deal damage
                 target.TakeDamage(punchDamage);
                 target.RegisterHit();
                 target.ApplyHit(hit.point);
 
-                // Impact feedback
                 if (punchHitSound)
                     AudioSource.PlayClipAtPoint(punchHitSound, hit.point);
                 if (punchImpactEffect)
@@ -257,6 +261,7 @@ public class FPSController : MonoBehaviour
             }
         }
     }
+
 
     #endregion
 

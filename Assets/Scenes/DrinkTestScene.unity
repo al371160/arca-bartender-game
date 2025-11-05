@@ -1837,6 +1837,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 060c7ef2fe199e94d8b8235f51425875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minTimeScale: 0.01
+  maxTimeScale: 1
+  responsiveness: 2
+  includeMouseMovement: 0
   slowdownFactor: 0.05
   slowdownLength: 40
 --- !u!4 &913679632
