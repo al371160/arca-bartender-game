@@ -2541,11 +2541,24 @@ MonoBehaviour:
   OnLeave:
     m_PersistentCalls:
       m_Calls: []
+  order: {fileID: 0}
   customerMaxHealth: 100
   customerCurrentHealth: 100
-  lastHitTime: -Infinity
+  ragdoll: {fileID: 0}
   hitCooldown: 1000
+  patience: 20
   wanderArea: {fileID: 0}
+  wanderCooldown: 3
+  attackRange: 2.5
+  attackCooldown: 2
+  attackDamage: 15
+  hitRange: 1
+  punchRange: 2
+  punchRadius: 0.8
+  punchDamage: 25
+  punchSwingSound: {fileID: 0}
+  punchHitSound: {fileID: 8300000, guid: bf8f591230e8c73448cc6f9154464bc2, type: 3}
+  punchImpactEffect: {fileID: 0}
 --- !u!114 &1239399712662056591
 MonoBehaviour:
   m_ObjectHideFlags: 0

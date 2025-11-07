@@ -44,6 +44,9 @@ public class CustomerBehavior : MonoBehaviour
     public int attackDamage = 15;
     private float lastAttackTime = -Mathf.Infinity;
     public float hitRange = 1f;
+    
+    [Header("Audio Settings")]
+    public AudioClip punchHitSound;
 
     // ---------------- ANIMATOR PARAMETERS ----------------
     private readonly int animWalking = Animator.StringToHash("Walking");
@@ -182,6 +185,10 @@ public class CustomerBehavior : MonoBehaviour
             {
                 bartender.TakeDamage(attackDamage);
                 Debug.Log($"{name} hit the bartender! (Distance: {distance:F2})");
+
+                
+                if (punchHitSound)
+                    AudioSource.PlayClipAtPoint(punchHitSound, bartender.transform.position);
             }
             else
             {
