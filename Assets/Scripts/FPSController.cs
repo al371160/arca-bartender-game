@@ -40,6 +40,11 @@ public class FPSController : MonoBehaviour
     public Transform leftHoldPoint;
     public Transform rightHoldPoint;
 
+    [Header("Crosshair UI")]
+    public UnityEngine.UI.Image crosshairImage;
+    public Sprite defaultCrosshair;
+    public Sprite canPickupCrosshair;
+
     [Header("Held Items")]
     public InteractiveItem leftHeldItem;
     public InteractiveItem rightHeldItem;
@@ -64,6 +69,7 @@ public class FPSController : MonoBehaviour
         HandleMovement();
         HandleActions();
         HandleTimeSlow();
+        UpdateCrosshair();
     }
 
     #region Movement & Camera
@@ -187,6 +193,26 @@ public class FPSController : MonoBehaviour
             rightArmAnimator.SetTrigger(punchTrigger);
 
         PerformPunch();
+    }
+
+    void UpdateCrosshair()
+    {
+        if (playerCamera == null || crosshairImage == null) return;
+
+        bool canPickup = false;
+
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        if (Physics.Raycast(ray, out RaycastHit hit, 3f)) // same pickup range
+        {
+            if (hit.collider.GetComponent<InteractiveItem>() != null)
+                canPickup = true;
+        }
+
+        // Change sprite
+        crosshairImage.sprite = canPickup ? canPickupCrosshair : defaultCrosshair;
+
+        // Instantly scale
+        crosshairImage.rectTransform.localScale = canPickup ? Vector3.one * 2f : Vector3.one;
     }
 
 

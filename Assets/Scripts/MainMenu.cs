@@ -5,12 +5,23 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [Header("Scene Settings")]
+    public string sceneToLoad = "FPSControllerScene"; // Editable in Inspector
+
+    // Called when Play button is pressed
     public void PlayGame()
     {
-        SceneManager.LoadScene("FPSControllerScene");
+        if (!string.IsNullOrEmpty(sceneToLoad))
+        {
+            SceneManager.LoadScene(sceneToLoad);
+        }
+        else
+        {
+            Debug.LogWarning("Scene name is empty! Please assign a scene in the inspector.");
+        }
     }
 
+    // Called when Quit button is pressed
     public void QuitGame()
     { 
         Application.Quit();

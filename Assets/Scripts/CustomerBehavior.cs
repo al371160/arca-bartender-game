@@ -32,17 +32,25 @@ public class CustomerBehavior : MonoBehaviour
     private Animator animator;
     private bool waiting = false;
     private bool seated = false;
-    [SerializeField] private float patience = 20f; // how long before they get angry
+    [SerializeField] private float patience = 20f;
     private float waitTimer = 0f;
     public BoxCollider wanderArea;
     [SerializeField] private float wanderCooldown = 3f;
     private float wanderTimer = 0f;
+
+    [Header("Attack Settings")]
+    public float attackRange = 2.5f;
+    public float attackCooldown = 2f;
+    public int attackDamage = 15;
+    private float lastAttackTime = -Mathf.Infinity;
+    public float hitRange = 1f;
 
     // ---------------- ANIMATOR PARAMETERS ----------------
     private readonly int animWalking = Animator.StringToHash("Walking");
     private readonly int animSitting = Animator.StringToHash("Sitting");
     private readonly int animAngry = Animator.StringToHash("Angry");
     private readonly int animLeaving = Animator.StringToHash("Leaving");
+    private readonly int animAttack = Animator.StringToHash("Attack");
 
     public bool IsWandering => waiting && seatTarget == null;
 
@@ -59,8 +67,11 @@ public class CustomerBehavior : MonoBehaviour
 
     void Update()
     {
+        if (customerIsDead) return;
+
         HandleWandering();
         HandleSeating();
+        HandleAngryAttack();
         UpdateAnimation();
     }
 
@@ -86,20 +97,14 @@ public class CustomerBehavior : MonoBehaviour
         if (order.CheckDrink(cup))
         {
             Debug.Log($"✅ {name} received the correct drink: {order.requestedRecipe.recipeName}");
-            
-            if (gameManager)
-                gameManager.AddTip(Random.Range(3, 6));
-
+            gameManager?.AddTip(Random.Range(3, 6));
             Leave();
-
             Destroy(cup.gameObject);
         }
         else
         {
             Debug.Log($"❌ {name} got the WRONG drink!");
-            if (gameManager)
-                gameManager.ApplyPenalty(1, $"{name} was unhappy with the wrong drink!");
-
+            gameManager?.ApplyPenalty(1, $"{name} was unhappy with the wrong drink!");
             BecomeBad();
         }
     }
@@ -129,11 +134,69 @@ public class CustomerBehavior : MonoBehaviour
         Debug.Log($"{name} has died.");
 
         animator.enabled = false; // Stop animations
+
+        // ❌ No despawn — the body stays
+        // (If you want them to despawn later, re-enable this coroutine)
+        // StartCoroutine(DespawnAfterDeath(16f));
     }
 
     public bool CanBeHit() => Time.time - lastHitTime >= hitCooldown;
     public void RegisterHit() => lastHitTime = Time.time;
     public void ApplyHit(Vector3 hitPoint) => ragdoll?.ApplyHit(hitPoint);
+
+    // ---------------------- ANGRY ATTACK ----------------------
+    private void HandleAngryAttack()
+    {
+        if (isGood || bartender == null || bartender.IsDead) return;
+
+        float dist = Vector3.Distance(transform.position, bartender.transform.position);
+        if (dist <= attackRange && Time.time - lastAttackTime >= attackCooldown)
+        {
+            StartCoroutine(DoAttack());
+        }
+        else if (dist > attackRange)
+        {
+            agent.SetDestination(bartender.transform.position);
+        }
+    }
+
+    private IEnumerator DoAttack()
+    {
+        lastAttackTime = Time.time;
+
+        // Only attack if the agent is active and on NavMesh
+        if (agent != null && agent.enabled && agent.isOnNavMesh)
+            agent.isStopped = true;
+
+        animator.SetTrigger(animAttack); // Trigger attack animation
+
+        // Wait for attack wind-up
+        yield return new WaitForSeconds(0.5f);
+
+        // Only hit if target (bartender) is still close enough
+        float hitRange = 2f; // Change this to your desired attack distance
+        if (bartender != null && !bartender.IsDead)
+        {
+            float distance = Vector3.Distance(transform.position, bartender.transform.position);
+            if (distance <= hitRange)
+            {
+                bartender.TakeDamage(attackDamage);
+                Debug.Log($"{name} hit the bartender! (Distance: {distance:F2})");
+            }
+            else
+            {
+                Debug.Log($"{name}'s attack missed — bartender too far! (Distance: {distance:F2})");
+            }
+        }
+
+        // Small delay after hit before movement resumes
+        yield return new WaitForSeconds(0.5f);
+
+        // Safely resume movement if still valid
+        if (agent != null && agent.enabled && agent.isOnNavMesh)
+            agent.isStopped = false;
+    }
+
 
     // ---------------------- SEATING & WANDERING ----------------------
     public void AssignSeat(Seat seat)
@@ -190,22 +253,16 @@ public class CustomerBehavior : MonoBehaviour
     private void HandleSeating()
     {
         if (seated && agent.remainingDistance < 0.5f)
-        {
             StartCoroutine(DoSeatRoutine());
-        }
     }
 
     private IEnumerator DoSeatRoutine()
     {
         gameManager?.RegisterRequest(this);
-
-        // Wait while the player prepares drink
         yield return new WaitForSeconds(Random.Range(10f, 20f));
 
         if (isGood)
-        {
             gameManager?.AddTip(Random.Range(1, 3));
-        }
         else
         {
             gameManager?.ApplyPenalty(1, "Bad customer caused trouble!");
@@ -228,10 +285,8 @@ public class CustomerBehavior : MonoBehaviour
         if (seatTarget != null)
             seatTarget.Release();
 
-        animator.SetTrigger(animLeaving); // Trigger leaving animation
+        animator.SetTrigger(animLeaving);
         OnLeave?.Invoke(this);
-
-        // Optional: delay destruction for animation
         Destroy(gameObject, 1f);
     }
 }
