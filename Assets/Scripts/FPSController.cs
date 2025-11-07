@@ -264,7 +264,7 @@ public class FPSController : MonoBehaviour
     public void PerformPunch()
     {
         // Resume time briefly
-        if (timeManager) timeManager.ResumeTimeTemporarily(0.35f);
+        if (timeManager) timeManager.ResumeTimeTemporarily(0.2f);
 
         // Play swing sound
         if (punchSwingSound)
