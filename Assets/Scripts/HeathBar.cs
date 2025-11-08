@@ -6,6 +6,7 @@ public class HealthBar : MonoBehaviour
     [Header("References")]
     public Bartender bartender;   // Drag your Bartender GameObject here
     public Image healthFill;      // Assign in Inspector (UI Image for the fill)
+    
 
     void Update()
     {

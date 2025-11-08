@@ -78,7 +78,7 @@ public class TimeSlow : MonoBehaviour
                 targetAberration,
                 lerpSpeed * 0.5f
             );
-            float targetDistortion = Mathf.Lerp(0f, -0.3f, slowStrength);
+            float targetDistortion = Mathf.Lerp(0f, -0.15f, slowStrength);
             lensDistortion.intensity.value = Mathf.Lerp(
                 lensDistortion.intensity.value,
                 targetDistortion,
