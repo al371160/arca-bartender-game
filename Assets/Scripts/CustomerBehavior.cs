@@ -38,13 +38,6 @@ public class CustomerBehavior : MonoBehaviour
     [SerializeField] private float wanderCooldown = 3f;
     private float wanderTimer = 0f;
 
-    [Header("Attack Settings")]
-    public float attackRange = 2.5f;
-    public float attackCooldown = 2f;
-    public int attackDamage = 15;
-    private float lastAttackTime = -Mathf.Infinity;
-    public float hitRange = 1f;
-    
     [Header("Audio Settings")]
     public AudioClip punchHitSound;
 
@@ -53,7 +46,6 @@ public class CustomerBehavior : MonoBehaviour
     private readonly int animSitting = Animator.StringToHash("Sitting");
     private readonly int animAngry = Animator.StringToHash("Angry");
     private readonly int animLeaving = Animator.StringToHash("Leaving");
-    private readonly int animAttack = Animator.StringToHash("Attack");
 
     public bool IsWandering => waiting && seatTarget == null;
 
@@ -74,7 +66,6 @@ public class CustomerBehavior : MonoBehaviour
 
         HandleWandering();
         HandleSeating();
-        HandleAngryAttack();
         UpdateAnimation();
     }
 
@@ -137,73 +128,11 @@ public class CustomerBehavior : MonoBehaviour
         Debug.Log($"{name} has died.");
 
         animator.enabled = false; // Stop animations
-
-        // ❌ No despawn — the body stays
-        // (If you want them to despawn later, re-enable this coroutine)
-        // StartCoroutine(DespawnAfterDeath(16f));
     }
 
     public bool CanBeHit() => Time.time - lastHitTime >= hitCooldown;
     public void RegisterHit() => lastHitTime = Time.time;
     public void ApplyHit(Vector3 hitPoint) => ragdoll?.ApplyHit(hitPoint);
-
-    // ---------------------- ANGRY ATTACK ----------------------
-    private void HandleAngryAttack()
-    {
-        if (isGood || bartender == null || bartender.IsDead) return;
-
-        float dist = Vector3.Distance(transform.position, bartender.transform.position);
-        if (dist <= attackRange && Time.time - lastAttackTime >= attackCooldown)
-        {
-            StartCoroutine(DoAttack());
-        }
-        else if (dist > attackRange)
-        {
-            agent.SetDestination(bartender.transform.position);
-        }
-    }
-
-    private IEnumerator DoAttack()
-    {
-        lastAttackTime = Time.time;
-
-        // Only attack if the agent is active and on NavMesh
-        if (agent != null && agent.enabled && agent.isOnNavMesh)
-            agent.isStopped = true;
-
-        animator.SetTrigger(animAttack); // Trigger attack animation
-
-        // Wait for attack wind-up
-        yield return new WaitForSeconds(0.5f);
-
-        // Only hit if target (bartender) is still close enough
-        float hitRange = 2f; // Change this to your desired attack distance
-        if (bartender != null && !bartender.IsDead)
-        {
-            float distance = Vector3.Distance(transform.position, bartender.transform.position);
-            if (distance <= hitRange)
-            {
-                bartender.TakeDamage(attackDamage);
-                Debug.Log($"{name} hit the bartender! (Distance: {distance:F2})");
-
-                
-                if (punchHitSound)
-                    AudioSource.PlayClipAtPoint(punchHitSound, bartender.transform.position);
-            }
-            else
-            {
-                Debug.Log($"{name}'s attack missed — bartender too far! (Distance: {distance:F2})");
-            }
-        }
-
-        // Small delay after hit before movement resumes
-        yield return new WaitForSeconds(0.5f);
-
-        // Safely resume movement if still valid
-        if (agent != null && agent.enabled && agent.isOnNavMesh)
-            agent.isStopped = false;
-    }
-
 
     // ---------------------- SEATING & WANDERING ----------------------
     public void AssignSeat(Seat seat)
@@ -271,14 +200,12 @@ public class CustomerBehavior : MonoBehaviour
         if (isGood)
             gameManager?.AddTip(Random.Range(1, 3));
         else
-        {
             gameManager?.ApplyPenalty(1, "Bad customer caused trouble!");
-            bartender?.TakeDamage(10);
-        }
 
         Leave();
     }
 
+    // ---------------------- BECOME BAD ----------------------
     public void BecomeBad()
     {
         if (!isGood) return;
