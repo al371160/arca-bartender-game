@@ -33,6 +33,10 @@ public class FPSController : MonoBehaviour
     public AudioClip punchHitSound;
     public ParticleSystem punchImpactEffect;
 
+    [Header("Audio Sources")]
+    public AudioSource swingAudioSource;
+    public AudioSource hitAudioSource;
+
     [Header("References")]
     public Camera playerCamera;
     public Animator leftArmAnimator;
@@ -268,7 +272,11 @@ public class FPSController : MonoBehaviour
 
         // Play swing sound
         if (punchSwingSound)
-            AudioSource.PlayClipAtPoint(punchSwingSound, playerCamera.transform.position);
+            // Instead of AudioSource.PlayClipAtPoint(punchSwingSound, playerCamera.transform.position);
+            if (swingAudioSource != null && punchSwingSound != null)
+                swingAudioSource.PlayOneShot(punchSwingSound);
+
+
 
         // SphereCast for punch
         if (Physics.SphereCast(playerCamera.transform.position, punchRadius, playerCamera.transform.forward, out RaycastHit hit, punchRange))
@@ -281,7 +289,9 @@ public class FPSController : MonoBehaviour
                 target.ApplyHit(hit.point);
 
                 if (punchHitSound)
-                    AudioSource.PlayClipAtPoint(punchHitSound, hit.point);
+                    // Instead of AudioSource.PlayClipAtPoint(punchHitSound, hit.point);
+                    if (hitAudioSource != null && punchHitSound != null)
+                    hitAudioSource.PlayOneShot(punchHitSound);
                 if (punchImpactEffect)
                     Instantiate(punchImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
             }

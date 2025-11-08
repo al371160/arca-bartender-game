@@ -52,6 +52,10 @@ public class CustomerBehavior : MonoBehaviour
 
     [Header("Audio Settings")]
     public AudioClip punchHitSound;
+    
+    [Header("Audio Settings")]
+    public AudioSource audioSource; // assign from spawner or inspector
+
 
     // ---------------- ANIMATOR PARAMETERS ----------------
     private readonly int animWalking = Animator.StringToHash("Walking");
@@ -291,14 +295,19 @@ public class CustomerBehavior : MonoBehaviour
         if (dist <= attackRange && bartender != null && !bartender.IsDead)
         {
             bartender.TakeDamage(attackDamage);
-            if (punchHitSound)
-                AudioSource.PlayClipAtPoint(punchHitSound, transform.position);
+
+            if (punchHitSound && audioSource != null)
+            {
+                audioSource.pitch = Random.Range(0.95f, 1.05f);
+                audioSource.PlayOneShot(punchHitSound);
+            }
         }
 
         yield return new WaitForSeconds(0.6f); // recovery
         if (agent != null && agent.enabled && agent.isOnNavMesh)
             agent.isStopped = false;
     }
+
 
     // ---------------------- LEAVE ----------------------
     public void Leave()

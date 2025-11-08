@@ -34,7 +34,7 @@ public class Bartender : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Global Volume not assigned in the inspector!");
+                //Debug.LogError("Global Volume not assigned in the inspector!");
             }
         }
     }
