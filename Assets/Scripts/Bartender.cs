@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement; // for restarting scene
 using TMPro; // for TextMeshPro
 using CustomerBehavior = CustomerBehavior;
+using System.Collections;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class Bartender : MonoBehaviour
 {
@@ -17,6 +20,24 @@ public class Bartender : MonoBehaviour
 
 
     private bool isGameOver = false;
+    public Volume globalVolume;
+    private Vignette vignette;
+
+    void Start()
+    {
+        if (globalVolume != null)
+        {
+            if (!globalVolume.profile.TryGet(out vignette))
+            {
+                vignette = globalVolume.profile.Add<Vignette>(true);
+                vignette.active = true;
+            }
+            else
+            {
+                Debug.LogError("Global Volume not assigned in the inspector!");
+            }
+        }
+    }
 
     void Update()
     {
@@ -24,6 +45,17 @@ public class Bartender : MonoBehaviour
         if (!IsDead)
         {
             survivalTime += Time.deltaTime;
+
+            if (currentHealth <= 30)
+            {
+                // 0.458
+                float targetVignette = Mathf.Lerp(0f, 0.458f, 0.5f);
+                vignette.intensity.value = 0.458f;
+            } else
+            {
+                float targetVignette = Mathf.Lerp(0f, 0f, 0.5f);
+                vignette.intensity.value = 0f;
+            }
 
             if (scoreText != null)
                 scoreText.text = $"Survival Time: {survivalTime:F1}s";
