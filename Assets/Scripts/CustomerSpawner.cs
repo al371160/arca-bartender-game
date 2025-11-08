@@ -40,6 +40,10 @@ public class CustomerSpawner : MonoBehaviour
         c.gameManager = gameManager;
 
         c.isGood = (Random.value < 0.7f);
+        if (!c.isGood)
+        {
+            c.BecomeBad(); // instantly turns into bad customer
+        }
 
         Seat freeSeat = GetFreeSeat();
         if (freeSeat != null) {

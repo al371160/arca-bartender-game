@@ -1,7 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using System.Collections;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
@@ -38,6 +38,18 @@ public class CustomerBehavior : MonoBehaviour
     [SerializeField] private float wanderCooldown = 3f;
     private float wanderTimer = 0f;
 
+    [Header("Attack Settings")]
+    public float chaseRange = 10f;
+    public float attackRange = 2f;
+    public int attackDamage = 10;
+    public float attackCooldown = 2f;
+    private float lastAttackTime = -Mathf.Infinity;
+
+    [Header("Movement Speeds")]
+    public float goodSpeed = 2.5f;
+    public float badSpeed = 4.5f;
+
+
     [Header("Audio Settings")]
     public AudioClip punchHitSound;
 
@@ -46,6 +58,7 @@ public class CustomerBehavior : MonoBehaviour
     private readonly int animSitting = Animator.StringToHash("Sitting");
     private readonly int animAngry = Animator.StringToHash("Angry");
     private readonly int animLeaving = Animator.StringToHash("Leaving");
+    private readonly int animAttack = Animator.StringToHash("Attack");
 
     public bool IsWandering => waiting && seatTarget == null;
 
@@ -56,16 +69,27 @@ public class CustomerBehavior : MonoBehaviour
         if (!ragdoll) ragdoll = GetComponent<RagdollController>();
         if (!order) order = GetComponent<CustomerOrder>();
         if (!gameManager) gameManager = FindFirstObjectByType<GameManager>();
+        if (!bartender) bartender = FindFirstObjectByType<Bartender>();
 
         customerCurrentHealth = customerMaxHealth;
+        agent.speed = goodSpeed;
     }
 
     void Update()
     {
         if (customerIsDead) return;
 
-        HandleWandering();
-        HandleSeating();
+        if (isGood)
+        {
+            HandleWandering();
+            HandleSeating();
+        }
+        else
+        {
+            HandleAggression();
+            Debug.Log("handleAggression triggered.");
+        }
+
         UpdateAnimation();
     }
 
@@ -208,12 +232,75 @@ public class CustomerBehavior : MonoBehaviour
     // ---------------------- BECOME BAD ----------------------
     public void BecomeBad()
     {
-        if (!isGood) return;
+        if (!isGood)
+            return;
+
         isGood = false;
         waiting = false;
-        Debug.Log($"{name} became bad inside the bar!");
+        seated = false;
+
+        // Make bad customers faster
+        if (agent != null)
+        {
+            agent.speed *= 1.5f;        // Move faster
+            agent.acceleration *= 1.5f; // React faster
+        }
+
+        // Double animation speed for aggressive movement/attacks
+        if (animator != null)
+            animator.speed = 2f;
+
+        Debug.Log($"{name} became bad inside the bar! Movement and animation speed increased.");
     }
 
+
+
+    // ---------------------- ANGRY / AGGRESSIVE BEHAVIOR ----------------------
+    private void HandleAggression()
+    {
+        if (bartender == null || bartender.IsDead)
+            return;
+
+        float dist = Vector3.Distance(transform.position, bartender.transform.position);
+
+        // Chase player if far
+        if (dist > attackRange && dist < chaseRange && agent.isOnNavMesh)
+        {
+            agent.isStopped = false;
+            agent.SetDestination(bartender.transform.position);
+        }
+        // Attack if close
+        else if (dist <= attackRange && Time.time >= lastAttackTime + attackCooldown)
+        {
+            StartCoroutine(DoAttack());
+        }
+    }
+
+    private IEnumerator DoAttack()
+    {
+        lastAttackTime = Time.time;
+
+        if (agent != null && agent.enabled && agent.isOnNavMesh)
+            agent.isStopped = true;
+
+        animator.SetTrigger(animAttack);
+
+        yield return new WaitForSeconds(0.4f); // attack wind-up
+
+        float dist = Vector3.Distance(transform.position, bartender.transform.position);
+        if (dist <= attackRange && bartender != null && !bartender.IsDead)
+        {
+            bartender.TakeDamage(attackDamage);
+            if (punchHitSound)
+                AudioSource.PlayClipAtPoint(punchHitSound, transform.position);
+        }
+
+        yield return new WaitForSeconds(0.6f); // recovery
+        if (agent != null && agent.enabled && agent.isOnNavMesh)
+            agent.isStopped = false;
+    }
+
+    // ---------------------- LEAVE ----------------------
     public void Leave()
     {
         if (seatTarget != null)

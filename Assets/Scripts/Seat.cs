@@ -3,15 +3,18 @@ using UnityEngine;
 public class Seat : MonoBehaviour
 {
     public bool IsOccupied { get; private set; }
-    public CustomerBehavior CurrentCustomer { get; private set; }
+    private CustomerBehavior occupant;
 
-    public void Claim(CustomerBehavior c) {
+    public void Claim(CustomerBehavior c)
+    {
+        if (IsOccupied) return; // prevent double claim
         IsOccupied = true;
-        CurrentCustomer = c;
+        occupant = c;
     }
 
-    public void Release() {
+    public void Release()
+    {
         IsOccupied = false;
-        CurrentCustomer = null;
+        occupant = null;
     }
 }
