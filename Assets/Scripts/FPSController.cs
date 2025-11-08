@@ -216,7 +216,7 @@ public class FPSController : MonoBehaviour
         crosshairImage.sprite = canPickup ? canPickupCrosshair : defaultCrosshair;
 
         // Instantly scale
-        crosshairImage.rectTransform.localScale = canPickup ? Vector3.one * 2f : Vector3.one;
+        crosshairImage.rectTransform.localScale = canPickup ? Vector3.one * 4f : Vector3.one;
     }
 
 
