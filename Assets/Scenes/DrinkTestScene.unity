@@ -2450,6 +2450,7 @@ MonoBehaviour:
   includeMouseMovement: 0
   slowdownFactor: 0.05
   slowdownLength: 40
+  globalVolume: {fileID: 832575518}
 --- !u!4 &913679632
 Transform:
   m_ObjectHideFlags: 0

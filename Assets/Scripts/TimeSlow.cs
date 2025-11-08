@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class TimeSlow : MonoBehaviour
 {
@@ -16,17 +18,40 @@ public class TimeSlow : MonoBehaviour
 
     private CharacterController controller;
     private bool temporarilyResumed = false;
+    public Volume globalVolume;
+    private LensDistortion lensDistortion;
+    private ChromaticAberration chromaticAberration;
 
     void Start()
     {
-        controller = FindObjectOfType<CharacterController>();
+        controller = FindFirstObjectByType<CharacterController>();
+
+        if (globalVolume != null)
+        {
+            if (!globalVolume.profile.TryGet(out lensDistortion))
+            {
+                lensDistortion = globalVolume.profile.Add<LensDistortion>(true);
+                lensDistortion.active = true;
+            }
+
+            if (!globalVolume.profile.TryGet(out chromaticAberration))
+            {
+                chromaticAberration = globalVolume.profile.Add<ChromaticAberration>(true);
+                chromaticAberration.active = true;
+            }
+        }
+        else
+        {
+            Debug.LogError("Global Volume not assigned in the inspector!");
+        }
     }
+
 
     void Update()
     {
         if (temporarilyResumed)
             return; // skip automatic slow-mo while in resume burst
-
+        
         if (controller != null)
         {
             // --- Dynamic slow motion like SUPERHOT ---
@@ -45,7 +70,20 @@ public class TimeSlow : MonoBehaviour
 
             float targetTimeScale = Mathf.Clamp(movementMagnitude + mouseInfluence, minTimeScale, maxTimeScale);
             float lerpSpeed = responsiveness * Time.unscaledDeltaTime;
+            float slowStrength = 1f - Mathf.InverseLerp(minTimeScale, maxTimeScale, Time.timeScale);
             Time.timeScale = Mathf.Lerp(Time.timeScale, targetTimeScale, lerpSpeed);
+            float targetAberration = Mathf.Lerp(0f, 1f, slowStrength);
+            chromaticAberration.intensity.value = Mathf.Lerp(
+                chromaticAberration.intensity.value,
+                targetAberration,
+                lerpSpeed * 0.5f
+            );
+            float targetDistortion = Mathf.Lerp(0f, -0.3f, slowStrength);
+            lensDistortion.intensity.value = Mathf.Lerp(
+                lensDistortion.intensity.value,
+                targetDistortion,
+                lerpSpeed
+            );
             Time.fixedDeltaTime = 0.02f * Time.timeScale;
         }
         else
