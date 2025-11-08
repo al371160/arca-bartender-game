@@ -16,8 +16,24 @@ public class TimeSlow : MonoBehaviour
     public float slowdownFactor = 0.05f;
     public float slowdownLength = 2f;
 
+    [Header("Effect Settings (Scales with Time)")]
+    [Tooltip("Base chromatic aberration intensity when fully slowed")]
+    [Range(0f, 1f)] public float maxAberrationAtMinTime = 1f;
+    [Tooltip("Base lens distortion intensity when fully slowed")]
+    [Range(-1f, 0f)] public float maxDistortionAtMinTime = -0.3f;
+    [Tooltip("How quickly the post effects interpolate")]
+    public float effectResponsiveness = 10f;
+
+    [Header("Debug / Runtime Values")]
+    public float targetTimeScale;
+    public float currentAberration;
+    public float currentDistortion;
+    public float slowStrength;
+
     private CharacterController controller;
     private bool temporarilyResumed = false;
+
+    [Header("Post Processing")]
     public Volume globalVolume;
     private LensDistortion lensDistortion;
     private ChromaticAberration chromaticAberration;
@@ -46,15 +62,14 @@ public class TimeSlow : MonoBehaviour
         }
     }
 
-
     void Update()
     {
         if (temporarilyResumed)
-            return; // skip automatic slow-mo while in resume burst
-        
+            return; // skip automatic slow-mo while temporarily resumed
+
         if (controller != null)
         {
-            // --- Dynamic slow motion like SUPERHOT ---
+            // --- Movement & Mouse input ---
             float horizontal = Input.GetAxisRaw("Horizontal");
             float vertical = Input.GetAxisRaw("Vertical");
             Vector3 desiredMove = new Vector3(horizontal, 0, vertical);
@@ -68,39 +83,59 @@ public class TimeSlow : MonoBehaviour
                 mouseInfluence = Mathf.Clamp01(mouseInfluence * 0.5f);
             }
 
-            float targetTimeScale = Mathf.Clamp(movementMagnitude + mouseInfluence, minTimeScale, maxTimeScale);
+            // --- Calculate target timescale ---
+            targetTimeScale = Mathf.Clamp(movementMagnitude + mouseInfluence, minTimeScale, maxTimeScale);
+
+            // Smoothly interpolate Time.timeScale
             float lerpSpeed = responsiveness * Time.unscaledDeltaTime;
-            float slowStrength = 1f - Mathf.InverseLerp(minTimeScale, maxTimeScale, Time.timeScale);
             Time.timeScale = Mathf.Lerp(Time.timeScale, targetTimeScale, lerpSpeed);
-            float targetAberration = Mathf.Lerp(0f, 1f, slowStrength);
-            chromaticAberration.intensity.value = Mathf.Lerp(
-                chromaticAberration.intensity.value,
-                targetAberration,
-                lerpSpeed * 0.5f
-            );
-            float targetDistortion = Mathf.Lerp(0f, -0.15f, slowStrength);
-            lensDistortion.intensity.value = Mathf.Lerp(
-                lensDistortion.intensity.value,
-                targetDistortion,
-                lerpSpeed
-            );
             Time.fixedDeltaTime = 0.02f * Time.timeScale;
+
+            // --- Effect intensity scales with timescale ---
+            // slowStrength = how "slowed" we currently are (1 = fully slow, 0 = normal)
+            slowStrength = 1f - Mathf.InverseLerp(minTimeScale, maxTimeScale, Time.timeScale);
+
+            float effectLerpSpeed = effectResponsiveness * Time.unscaledDeltaTime;
+
+            float targetAberration = Mathf.Lerp(0f, maxAberrationAtMinTime, slowStrength);
+            float targetDistortion = Mathf.Lerp(0f, maxDistortionAtMinTime, slowStrength);
+
+            if (chromaticAberration != null)
+            {
+                chromaticAberration.intensity.value = Mathf.Lerp(
+                    chromaticAberration.intensity.value,
+                    targetAberration,
+                    effectLerpSpeed
+                );
+                currentAberration = chromaticAberration.intensity.value;
+            }
+
+            if (lensDistortion != null)
+            {
+                lensDistortion.intensity.value = Mathf.Lerp(
+                    lensDistortion.intensity.value,
+                    targetDistortion,
+                    effectLerpSpeed
+                );
+                currentDistortion = lensDistortion.intensity.value;
+            }
         }
         else
         {
-            // fallback to normal behavior
+            // fallback to normal recovery
             Time.timeScale += (1f / slowdownLength) * Time.unscaledDeltaTime;
             Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
         }
     }
 
+    // --- Manual Slow Motion Trigger ---
     public void DoSlowMotion()
     {
         Time.timeScale = slowdownFactor;
         Time.fixedDeltaTime = Time.timeScale * 0.02f;
     }
 
-    // --- NEW FEATURE: Resume time temporarily ---
+    // --- Temporarily resume full-speed time ---
     public void ResumeTimeTemporarily(float duration = 0.1f)
     {
         if (!gameObject.activeInHierarchy) return;
